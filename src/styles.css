@@ -1,3 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+
+.non-vulnerable {
+  @apply bg-green-700;
+}
+
+.vulnerable {
+  @apply bg-red-500;
+}
+
+.spades {
+    @apply text-black;
+}
+
+.hearts {
+    @apply text-red-700;
+}
+
+.diamonds {
+    @apply text-orange-600;
+}
+
+.clubs {
+    @apply text-gray-700;
+}
+
+.no-trump {
+    @apply text-blue-800;
+}
+
+.single-card-value {
+    padding: 0 0.125rem;
+}

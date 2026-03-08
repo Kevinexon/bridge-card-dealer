@@ -1,1 +1,44 @@
-<p>hand works!</p>
+<div class="bg-gray-100 rounded-2xl shadow-md">
+  <div class="h-48 text-lg">
+    <div class="h-1/4 p-4 flex items-center">
+      <mat-icon class="spades">home</mat-icon>
+      <span class="single-card-value">A</span>
+      <span class="single-card-value">Q</span>
+      <span class="single-card-value">J</span>
+      <span class="single-card-value">5</span>
+    </div>
+    <div class="h-1/4 p-4 flex items-center">
+      <mat-icon class="hearts">favorite</mat-icon>
+      <span class="single-card-value">A</span>
+      <span class="single-card-value">Q</span>
+      <span class="single-card-value">J</span>
+      <span class="single-card-value">5</span>
+    </div>
+    <div class="h-1/4 p-4 flex items-center">
+      <mat-icon class="diamonds">diamond</mat-icon>
+      <span class="single-card-value">A</span>
+      <span class="single-card-value">Q</span>
+      <span class="single-card-value">J</span>
+      <span class="single-card-value">5</span>
+    </div>
+    <div class="h-1/4 p-4 flex items-center">
+      <mat-icon class="clubs">pets</mat-icon>
+      <span class="single-card-value">A</span>
+      <span class="single-card-value">Q</span>
+      <span class="single-card-value">J</span>
+      <span class="single-card-value">5</span>
+    </div>
+  </div>
+
+  <div class="text-2xl rounded-2xl p-2 text-center bg-gray-400">
+    @if (isDealer()) {
+      <span class="mx-1 border-2 rounded-full px-2 font-bold">R</span>
+    }
+    <span
+      class="rounded-2xl px-4 py-1 non-vulnerable text-white"
+      [class.vulnerable]="isVulnerable()"
+    >
+      {{ handName() }}
+    </span>
+  </div>
+</div>
