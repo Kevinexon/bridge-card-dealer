@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Bidding } from './bidding';
+import { BiddingTable } from './bidding-table';
 
-describe('Bidding', () => {
-  let component: Bidding;
-  let fixture: ComponentFixture<Bidding>;
+describe('BiddingTable', () => {
+  let component: BiddingTable;
+  let fixture: ComponentFixture<BiddingTable>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Bidding]
+      imports: [BiddingTable]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Bidding);
+    fixture = TestBed.createComponent(BiddingTable);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

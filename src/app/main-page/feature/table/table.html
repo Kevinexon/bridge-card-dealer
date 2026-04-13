@@ -1,27 +1,87 @@
-<div class="flex flex-wrap p-4 min-h-200 h-screen">
-  <div class="flex w-full">
-    <div class="border flex-1 p-4"><app-board /></div>
+<div class="flex flex-wrap p-4 min-h-240 h-screen">
+  <div class="flex w-full items-start h-1/3">
+    <div class="flex-1 p-4">
+      <app-bidding-table />
+    </div>
 
-    <div class="border w-1/3 p-4"><app-hand /></div>
+    <div class="w-1/3 p-4">
+      <app-hand
+        [handName]="'North'"
+        [isDealer]="dealer() === 'North'"
+        [isVulnerable]="true"
+        [handDeck]="northHand()"
+        [handsTurn]="whichHandsTurn() === 'North'"
+        [canPlay]="!biddingFase()"
+        [canMoveCards]="cardsMovementEnabled()"
+        [restHands]="['South', 'East', 'West']"
+        (onCardDropped)="onMoveCard($event)"
+        (onCardPlayed)="onCardPlayed($event)"
+      />
+    </div>
 
-    <div class="border flex-1 p-4">
-      <app-bidding />
+    <div class="flex-1 p-4"></div>
+  </div>
+
+  <div class="flex w-full items-center h-1/3">
+    <div class="w-1/3 p-4">
+      <app-hand
+        [handName]="'West'"
+        [isDealer]="dealer() === 'West'"
+        [isVulnerable]="false"
+        [handDeck]="westHand()"
+        [handsTurn]="whichHandsTurn() === 'West'"
+        [canPlay]="!biddingFase()"
+        [canMoveCards]="cardsMovementEnabled()"
+        [restHands]="['South', 'East', 'North']"
+        (onCardDropped)="onMoveCard($event)"
+        (onCardPlayed)="onCardPlayed($event)"
+      />
+    </div>
+
+    <div class="flex-1 p-4">
+      @if (biddingFase()) {
+        <app-bidding-panel />
+      } @else {
+        <app-play-area [playedCards]="playedCards()" />
+      }
+    </div>
+
+    <div class="w-1/3 p-4">
+      <app-hand
+        [handName]="'East'"
+        [isDealer]="dealer() === 'East'"
+        [isVulnerable]="false"
+        [handDeck]="eastHand()"
+        [handsTurn]="whichHandsTurn() === 'East'"
+        [canPlay]="!biddingFase()"
+        [canMoveCards]="cardsMovementEnabled()"
+        [restHands]="['South', 'North', 'West']"
+        (onCardDropped)="onMoveCard($event)"
+        (onCardPlayed)="onCardPlayed($event)"
+      />
     </div>
   </div>
 
-  <div class="flex w-full">
-    <div class="border w-1/3 p-4"><app-hand /></div>
+  <div class="flex w-full items-end h-1/3">
+    <div class="flex-1 p-4">
+      <app-tricks-count [playedTricks]="playedTricks()" />
+    </div>
 
-    <div class="border flex-1 p-4"></div>
+    <div class="w-1/3 p-4">
+      <app-hand
+        [handName]="'South'"
+        [isDealer]="dealer() === 'South'"
+        [isVulnerable]="true"
+        [handDeck]="southHand()"
+        [handsTurn]="whichHandsTurn() === 'South'"
+        [canPlay]="!biddingFase()"
+        [canMoveCards]="cardsMovementEnabled()"
+        [restHands]="['North', 'East', 'West']"
+        (onCardDropped)="onMoveCard($event)"
+        (onCardPlayed)="onCardPlayed($event)"
+      />
+    </div>
 
-    <div class="border w-1/3 p-4"><app-hand /></div>
-  </div>
-
-  <div class="flex w-full">
-    <div class="border flex-1 p-4"></div>
-
-    <div class="border w-1/3 p-4"><app-hand /></div>
-
-    <div class="border flex-1 p-4"></div>
+    <div class="flex-1 p-4"></div>
   </div>
 </div>

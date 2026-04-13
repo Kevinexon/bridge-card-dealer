@@ -1,1 +1,66 @@
-<p>hand works!</p>
+<div
+  [id]="handName()"
+  cdkDropList
+  [cdkDropListData]="sortedHandDeck()"
+  cdkDropListOrientation="horizontal"
+  [cdkDropListConnectedTo]="restHands()"
+  (cdkDropListDropped)="drop($event)"
+>
+  @if (!isDummy()) {
+    <div
+      class="h-48 w-full flex justify-center"
+      [class]="sortedHandDeck().length > 5 ? 'pr-24' : 'pr-0'"
+    >
+      @for (item of sortedHandDeck(); track item.imgUrl) {
+        <div class="relative flex-1 overflow-visible h-48 max-w-32">
+          <img
+            [src]="item.imgUrl"
+            [alt]="item.color + ' ' + item.name"
+            class="absolute h-full border border-gray-500 cursor-pointer rounded-md w-32 max-w-32 hover:bottom-1"
+            (click)="cardPlayed(item)"
+            [cdkDragDisabled]="!canMoveCards()"
+            [cdkDragData]="item"
+            cdkDrag
+          />
+        </div>
+      }
+    </div>
+  }
+
+  <div
+    class="text-2xl rounded-2xl p-2 text-center bg-gray-300 shadow-md max-w-96 mx-auto"
+    [class.bg-indigo-300]="handsTurn()"
+    [class]="isDummy() ? 'mb-2' : 'mt-2'"
+  >
+    @if (isDealer()) {
+      <span class="mx-1 border-2 rounded-full px-2 font-bold">R</span>
+    }
+    <span
+      class="rounded-2xl px-4 py-1 non-vulnerable text-white"
+      [class.vulnerable]="isVulnerable()"
+    >
+      {{ handName() }}
+    </span>
+  </div>
+</div>
+
+@if (isDummy()) {
+  <div class="w-full flex">
+    @for (color of sortedDummyHandDeck(); track $index) {
+      <div class="w-1/4 px-2 relative">
+        @for (item of sortedDummyHandDeck()[$index]; track $index) {
+          <img
+            [src]="item.imgUrl"
+            [alt]="item.color + ' ' + item.name"
+            class="absolute w-32 border border-gray-500 cursor-pointer rounded-md h-48 max-h-48 hover:left-1"
+            [style]="'top: ' + $index * 35 + 'px;'"
+            (click)="cardPlayed(item)"
+            [cdkDragData]="item"
+            [cdkDragDisabled]="!canMoveCards()"
+            cdkDrag
+          />
+        }
+      </div>
+    }
+  </div>
+}
