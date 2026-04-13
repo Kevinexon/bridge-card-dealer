@@ -32,4 +32,10 @@
 
 .single-card-value {
     padding: 0 0.125rem;
+    cursor: pointer;
+}
+
+.single-card-value:hover {
+    background: #E0E0E0;
+    border-radius: 5rem;
 }

@@ -1,0 +1,16 @@
+<div class="bg-mist-300 border border-gray-300 rounded-2xl p-2 px-4 shadow-md max-w-xs">
+  <div class="font-bold text-xl">
+    <span class="text-blue-600 pr-1">{{ contract() }}</span> {{ declarer() }}
+  </div>
+
+  <div class="grid grid-cols-2 gap-2 pt-1">
+    <div class="flex items-center gap-1">
+      <div class="text-gray-800 pr-2">NS:</div>
+      <div class="font-bold">{{ tricksNS() }}</div>
+    </div>
+    <div class="flex items-center gap-1">
+      <div class="text-gray-800 pr-2">EW:</div>
+      <div class="font-bold">{{ tricksEW() }}</div>
+    </div>
+  </div>
+</div>
