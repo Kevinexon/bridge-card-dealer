@@ -1,0 +1,50 @@
+<div class="p-4 rounded-2xl" [class]="isPanelHidden() ? '' : 'shadow-sm bg-gray-100'">
+  <div class="text-2xl flex justify-between">
+    <div><span [class.hidden]="isPanelHidden()">Rozdanie</span></div>
+    <button matIconButton (click)="changePanelVisibility()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+
+  <section [class.hidden]="isPanelHidden()">
+    <div class="flex mt-2">
+      <div class="flex-1">
+        <mat-form-field appearance="outline">
+          <mat-label>Numer rozdania</mat-label>
+          <input matInput type="number" [(ngModel)]="number" />
+        </mat-form-field>
+      </div>
+
+      <div class="flex-1 flex justify-center">
+        <button matFab extended (click)="onDealNew.emit()">
+          <mat-icon>refresh</mat-icon>
+          Rozdaj ponownie
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <mat-slide-toggle [(ngModel)]="editMode" labelPosition="before">
+        Tryb edycji rąk:</mat-slide-toggle
+      >
+    </div>
+
+    <div class="mt-2">
+      <span class="pr-2">Założenia (po parti):</span>
+      <mat-button-toggle-group [(ngModel)]="linesVulnerable" multiple>
+        <mat-button-toggle value="NS">NS</mat-button-toggle>
+        <mat-button-toggle value="WE">WE</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="mt-2">
+      <span class="pr-4">Dealer:</span>
+      <mat-button-toggle-group [(ngModel)]="dealer" (valueChange)="onReset.emit()">
+        <mat-button-toggle value="North">North</mat-button-toggle>
+        <mat-button-toggle value="East">East</mat-button-toggle>
+        <mat-button-toggle value="South">South</mat-button-toggle>
+        <mat-button-toggle value="West">West</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </section>
+</div>

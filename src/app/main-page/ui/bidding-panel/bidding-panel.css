@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+.bidding-button {
+    @apply rounded-2xl px-2 p-1 min-w-12 text-center mx-1;
+}
+
+.bidding-button:hover {
+    @apply bg-indigo-100 cursor-pointer;
+}
+
+.bidding-button-selected {
+    @apply bg-indigo-200;
+}
+
+.bidding-button-disabled {
+    @apply text-gray-400;
+}
+
+.bidding-button-disabled:hover {
+    @apply bg-gray-100;
+}

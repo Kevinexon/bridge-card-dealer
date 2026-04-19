@@ -1,1 +1,67 @@
-<p>bidding-panel works!</p>
+<div class="bg-gray-100 rounded-2xl shadow-sm p-4 w-106 mx-auto">
+  <div class="pb-3">
+    <span class="text-xl rounded-2xl font-bold px-2">
+      {{ handTurn() }}
+    </span>
+  </div>
+
+  <mat-divider />
+
+  <div class="flex py-2">
+    <div class="bidding-button" matRipple (click)="selectNotValue(false, 'PASS')">
+      <span class="text-xl pass font-bold"> PASS </span>
+    </div>
+    <div
+      class="bidding-button double"
+      [class.bidding-button-disabled]="doubleDisabled()"
+      matRipple
+      [matRippleDisabled]="doubleDisabled()"
+      (click)="selectNotValue(doubleDisabled(), 'X')"
+    >
+      <span class="text-xl font-bold"> X </span>
+    </div>
+    <div
+      class="bidding-button redouble"
+      [class.bidding-button-disabled]="redoubleDisabled()"
+      matRipple
+      [matRippleDisabled]="redoubleDisabled()"
+      (click)="selectNotValue(redoubleDisabled(), 'XX')"
+    >
+      <span class="text-xl font-bold"> XX </span>
+    </div>
+  </div>
+
+  <mat-divider />
+
+  <div class="flex py-2">
+    @for (level of levels(); track level) {
+      <div
+        class="bidding-button"
+        [class.bidding-button-selected]="selectedLevel() === level"
+        [class.bidding-button-disabled]="minLevel() > level"
+        matRipple
+        [matRippleDisabled]="minLevel() > level"
+        (click)="selectLevel(minLevel() > level, level)"
+      >
+        <span class="text-xl font-bold"> {{ level }}</span>
+      </div>
+    }
+  </div>
+
+  <mat-divider />
+
+  <div class="flex pt-2">
+    @for (color of colors(); track color.name) {
+      <div
+        class="bidding-button"
+        [class]="color.name === 'NT' ? `${color.name}` : `${color.name}`"
+        [class.bidding-button-disabled]="lastColorSeniority() >= color.seniority"
+        matRipple
+        [matRippleDisabled]="lastColorSeniority() >= color.seniority"
+        (click)="selectColor(color.name)"
+      >
+        <span class="font-bold text-2xl">{{ color.suit }}</span>
+      </div>
+    }
+  </div>
+</div>

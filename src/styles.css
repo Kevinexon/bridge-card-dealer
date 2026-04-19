@@ -11,23 +11,35 @@
 }
 
 .spades {
-    @apply text-black;
+    @apply text-[#000485]
 }
 
 .hearts {
-    @apply text-red-700;
+    @apply text-[#f20000]
 }
 
 .diamonds {
-    @apply text-orange-600;
+    @apply text-[#f52700]
 }
 
 .clubs {
-    @apply text-gray-700;
+    @apply text-[#121212]
 }
 
-.no-trump {
-    @apply text-blue-800;
+.NT {
+    @apply text-blue-700;
+}
+
+.pass {
+    @apply text-green-700
+}
+
+.double {
+    @apply text-red-500
+}
+
+.redouble {
+    @apply text-blue-700;
 }
 
 .single-card-value {

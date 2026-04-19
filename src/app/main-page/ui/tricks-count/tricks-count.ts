@@ -1,13 +1,5 @@
-import {
-  Component,
-  computed,
-  input,
-  InputSignal,
-  Signal,
-  signal,
-  WritableSignal,
-} from '@angular/core';
-import { HandName } from '../../utils/card.util';
+import { Component, computed, input, InputSignal, Signal } from '@angular/core';
+import { Contract } from '../../utils/bidding.util';
 import { Trick } from '../../utils/trick.util';
 
 @Component({
@@ -18,9 +10,8 @@ import { Trick } from '../../utils/trick.util';
 })
 export class TricksCount {
   playedTricks: InputSignal<Trick[]> = input.required();
-
-  contract: WritableSignal<string> = signal('');
-  declarer: WritableSignal<string> = signal('');
+  number: InputSignal<number> = input.required();
+  contract = input<Contract>();
 
   tricksNS: Signal<number> = computed(() => {
     const tricks = this.playedTricks();

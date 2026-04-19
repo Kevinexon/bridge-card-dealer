@@ -14,6 +14,7 @@ export class TableService {
       deck[i].hand = hand;
     }
     this.deck.set(deck);
+    this.playedTricks.set([]);
   }
 
   moveCard(handTarget: HandName, card: Card) {
@@ -35,6 +36,29 @@ export class TableService {
       ...this.playedTricks(),
       { playedCards, winner: this.determineTrickWinner(playedCards, trumpSuit) },
     ]);
+  }
+
+  undoTrick(): Trick {
+    const lastTrick = this.playedTricks().slice(-1)[0];
+    this.playedTricks().splice(this.playedTricks().length - 1);
+    this.playedTricks.set([...this.playedTricks()]);
+    return lastTrick;
+  }
+
+  refreshPlayedCards() {
+    this.deck().forEach((d) => {
+      d.isPlayed = false;
+    });
+    this.deck.set([...this.deck()]);
+    this.clearTricks();
+  }
+
+  clearTricks() {
+    this.playedTricks.set([]);
+  }
+
+  refreshDeck() {
+    this.deck.set([...this.deck()]);
   }
 
   private determineTrickWinner(playedCards: Card[], trumpSuit?: CardColor): HandName {

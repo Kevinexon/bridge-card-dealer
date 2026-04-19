@@ -1,6 +1,21 @@
-<div class="bg-mist-300 border border-gray-300 rounded-2xl p-2 px-4 shadow-md max-w-xs">
-  <div class="font-bold text-xl">
-    <span class="text-blue-600 pr-1">{{ contract() }}</span> {{ declarer() }}
+<div class="bg-gray-300 rounded-2xl p-2 px-4 shadow-sm max-w-xs">
+  <div class="flex p-2 font-bold">
+    <div class="w-1/3 text-4xl text-center">{{ number() }}</div>
+
+    <div class="w-2/3 text-xl flex items-end justify-center">
+      {{ contract()?.biddingValue }}
+      <span class="pr-2" [class]="contract()?.color" [class.text-2xl]="contract()?.suit !== 'BA'">{{
+        contract()?.suit
+      }}</span>
+      <span [class]="contract()?.isRedubled ? 'redouble' : 'double'">
+        @if (contract()?.isRedubled) {
+          XX
+        } @else if (contract()?.isDoubled) {
+          X
+        }
+      </span>
+      <span class="pl-2">{{ contract()?.declarer }}</span>
+    </div>
   </div>
 
   <div class="grid grid-cols-2 gap-2 pt-1">

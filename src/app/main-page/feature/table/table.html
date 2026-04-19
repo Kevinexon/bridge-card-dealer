@@ -1,14 +1,18 @@
 <div class="flex flex-wrap p-4 min-h-240 h-screen">
   <div class="flex w-full items-start h-1/3">
     <div class="flex-1 p-4">
-      <app-bidding-table />
+      <app-bidding-table
+        [biddingHistory]="biddingHistory()"
+        [isNSVulnerable]="isNsVulnerable()"
+        [isEWVulnerable]="isEwVulnerable()"
+      />
     </div>
 
     <div class="w-1/3 p-4">
       <app-hand
         [handName]="'North'"
         [isDealer]="dealer() === 'North'"
-        [isVulnerable]="true"
+        [isVulnerable]="isNsVulnerable()"
         [handDeck]="northHand()"
         [handsTurn]="whichHandsTurn() === 'North'"
         [canPlay]="!biddingFase()"
@@ -19,7 +23,16 @@
       />
     </div>
 
-    <div class="flex-1 p-4"></div>
+    <div class="flex-1 p-4">
+      <app-top-admin-panel
+        [(dealer)]="dealer"
+        [(linesVulnerable)]="linesVulnerable"
+        [(number)]="number"
+        [(editMode)]="cardsMovementEnabled"
+        (onDealNew)="dealNewDeck()"
+        (onReset)="reset()"
+      />
+    </div>
   </div>
 
   <div class="flex w-full items-center h-1/3">
@@ -27,7 +40,7 @@
       <app-hand
         [handName]="'West'"
         [isDealer]="dealer() === 'West'"
-        [isVulnerable]="false"
+        [isVulnerable]="isEwVulnerable()"
         [handDeck]="westHand()"
         [handsTurn]="whichHandsTurn() === 'West'"
         [canPlay]="!biddingFase()"
@@ -40,7 +53,11 @@
 
     <div class="flex-1 p-4">
       @if (biddingFase()) {
-        <app-bidding-panel />
+        <app-bidding-panel
+          [handTurn]="whichHandsTurn()"
+          [biddingHistory]="biddingHistory()"
+          (onBidding)="onBidding($event)"
+        />
       } @else {
         <app-play-area [playedCards]="playedCards()" />
       }
@@ -50,7 +67,7 @@
       <app-hand
         [handName]="'East'"
         [isDealer]="dealer() === 'East'"
-        [isVulnerable]="false"
+        [isVulnerable]="isEwVulnerable()"
         [handDeck]="eastHand()"
         [handsTurn]="whichHandsTurn() === 'East'"
         [canPlay]="!biddingFase()"
@@ -64,14 +81,18 @@
 
   <div class="flex w-full items-end h-1/3">
     <div class="flex-1 p-4">
-      <app-tricks-count [playedTricks]="playedTricks()" />
+      <app-tricks-count
+        [number]="number()"
+        [playedTricks]="playedTricks()"
+        [contract]="contract() ?? undefined"
+      />
     </div>
 
     <div class="w-1/3 p-4">
       <app-hand
         [handName]="'South'"
         [isDealer]="dealer() === 'South'"
-        [isVulnerable]="true"
+        [isVulnerable]="isNsVulnerable()"
         [handDeck]="southHand()"
         [handsTurn]="whichHandsTurn() === 'South'"
         [canPlay]="!biddingFase()"
@@ -82,6 +103,14 @@
       />
     </div>
 
-    <div class="flex-1 p-4"></div>
+    <div class="flex-1 p-4 flex justify-end">
+      <app-bottom-admin-panel
+        (undoBid)="onUndoBid()"
+        (resetBidding)="resetBidding()"
+        (undoCard)="onUndoCard()"
+        (undoTrick)="onUndoTrick()"
+        (resetPlayedCards)="resetPlayedCards()"
+      />
+    </div>
   </div>
 </div>

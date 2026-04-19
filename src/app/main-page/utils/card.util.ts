@@ -48,22 +48,22 @@ export function createCard(color: CardColor, name: CardName): Card {
   };
 }
 
-// export function createDeck(): Card[] {
-//   return [
-//     ...['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].flatMap((name) =>
-//       ['spades', 'hearts', 'diamonds', 'clubs'].map((color) =>
-//         createCard(color as CardColor, name as CardName),
-//       ),
-//     ),
-//   ];
-// }
-
 export function createDeck(): Card[] {
   return [
-    ...['spades', 'hearts', 'diamonds', 'clubs'].flatMap((color) =>
-      ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].map((name) =>
+    ...['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].flatMap((name) =>
+      ['spades', 'hearts', 'diamonds', 'clubs'].map((color) =>
         createCard(color as CardColor, name as CardName),
       ),
     ),
   ];
 }
+
+// export function createDeck(): Card[] {
+//   return [
+//     ...['spades', 'hearts', 'diamonds', 'clubs'].flatMap((color) =>
+//       ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].map((name) =>
+//         createCard(color as CardColor, name as CardName),
+//       ),
+//     ),
+//   ];
+// }

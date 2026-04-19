@@ -14,7 +14,7 @@
       @for (item of sortedHandDeck(); track item.imgUrl) {
         <div class="relative flex-1 overflow-visible h-48 max-w-32">
           <img
-            [src]="item.imgUrl"
+            [src]="hideCards() ? reverseUrl() : item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             class="absolute h-full border border-gray-500 cursor-pointer rounded-md w-32 max-w-32 hover:bottom-1"
             (click)="cardPlayed(item)"
@@ -28,12 +28,12 @@
   }
 
   <div
-    class="text-2xl rounded-2xl p-2 text-center bg-gray-300 shadow-md max-w-96 mx-auto"
+    class="text-2xl rounded-2xl p-2 text-center bg-gray-300 shadow-sm max-w-96 mx-auto relative"
     [class.bg-indigo-300]="handsTurn()"
     [class]="isDummy() ? 'mb-2' : 'mt-2'"
   >
     @if (isDealer()) {
-      <span class="mx-1 border-2 rounded-full px-2 font-bold">R</span>
+      <span class="mx-1 border-2 rounded-full px-2 font-bold">D</span>
     }
     <span
       class="rounded-2xl px-4 py-1 non-vulnerable text-white"
@@ -41,6 +41,16 @@
     >
       {{ handName() }}
     </span>
+
+    @if (canMoveCards()) {
+      <span>({{ handDeck().length }})</span>
+    }
+
+    <div class="absolute right-2 top-1">
+      <button matIconButton (click)="changeVisibility()">
+        <mat-icon>visibility</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
 

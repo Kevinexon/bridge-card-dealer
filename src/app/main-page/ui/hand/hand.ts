@@ -1,12 +1,14 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { Card, CardColor, HandName } from '../../utils/card.util';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-hand',
   templateUrl: './hand.html',
   styleUrl: './hand.css',
-  imports: [CdkDrag, CdkDropList],
+  imports: [CdkDrag, CdkDropList, MatButtonModule, MatIconModule],
 })
 export class Hand {
   handName = input.required<HandName>();
@@ -19,6 +21,9 @@ export class Hand {
   canPlay = input<boolean>(false);
   canMoveCards = input<boolean>(false);
   isDummy = input<boolean>(false);
+
+  hideCards = signal<boolean>(false);
+  reverseUrl = signal<string>('cards/reverse.png');
 
   onCardPlayed = output<Card>();
   onCardDropped = output<{ card: Card; targetHand: HandName }>();
@@ -48,7 +53,7 @@ export class Hand {
   });
 
   cardPlayed(card: Card) {
-    if (this.canPlay() && this.handsTurn()) {
+    if (this.canPlay() && this.handsTurn() && !this.canMoveCards()) {
       this.onCardPlayed.emit(card);
     }
   }
@@ -58,5 +63,9 @@ export class Hand {
       targetHand: event.container.id as HandName,
       card: event.item.data,
     });
+  }
+
+  changeVisibility() {
+    this.hideCards.set(!this.hideCards());
   }
 }

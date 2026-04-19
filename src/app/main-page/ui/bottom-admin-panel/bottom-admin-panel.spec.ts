@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BiddingPanel } from './bidding-panel';
+import { BottomAdminPanel } from './bottom-admin-panel';
 
-describe('BiddingPanel', () => {
-  let component: BiddingPanel;
-  let fixture: ComponentFixture<BiddingPanel>;
+describe('BottomAdminPanel', () => {
+  let component: BottomAdminPanel;
+  let fixture: ComponentFixture<BottomAdminPanel>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BiddingPanel]
+      imports: [BottomAdminPanel]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BiddingPanel);
+    fixture = TestBed.createComponent(BottomAdminPanel);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

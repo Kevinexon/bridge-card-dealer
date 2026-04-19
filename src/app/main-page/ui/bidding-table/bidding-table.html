@@ -1,1 +1,53 @@
-<p>bidding-table works!</p>
+<div class="shadow-sm rounded-2xl bg-gray-300 flex p-2 min-h-25">
+  <div class="w-1/4 border-r text-center">
+    <span class="hand-name-label non-vulnerable" [class.vulnerable]="isNSVulnerable()">
+      North
+    </span>
+
+    <div class="value-column">
+      @for (item of northHistory(); track $index) {
+        <div>
+          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="w-1/4 border-r text-center">
+    <span class="hand-name-label non-vulnerable" [class.vulnerable]="isEWVulnerable()"> East </span>
+
+    <div class="value-column">
+      @for (item of eastHistory(); track $index) {
+        <div>
+          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="w-1/4 border-r text-center">
+    <span class="hand-name-label non-vulnerable" [class.vulnerable]="isNSVulnerable()">
+      South
+    </span>
+
+    <div class="value-column">
+      @for (item of southHistory(); track $index) {
+        <div>
+          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="w-1/4 text-center">
+    <span class="hand-name-label non-vulnerable" [class.vulnerable]="isEWVulnerable()"> West </span>
+
+    <div class="value-column">
+      @for (item of westHistory(); track $index) {
+        <div>
+          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
