@@ -18,6 +18,13 @@ export interface Contract extends Bidding {
   declarer: HandName;
 }
 
+export const BiddingColorToCardColorMap: Map<BiddingColor, CardColor> = new Map([
+  ['clubs', 'clubs'],
+  ['spades', 'spades'],
+  ['diamonds', 'diamonds'],
+  ['hearts', 'hearts'],
+]);
+
 export const BiddingColorSeniorityMap: Map<BiddingColor, number> = new Map([
   ['clubs', 1],
   ['diamonds', 2],

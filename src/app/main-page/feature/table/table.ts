@@ -19,6 +19,7 @@ import { TopAdminPanel } from '../../ui/top-admin-panel/top-admin-panel';
 import { TricksCount } from '../../ui/tricks-count/tricks-count';
 import {
   Bidding,
+  BiddingColorToCardColorMap,
   Contract,
   createContract,
   findDeclarer,
@@ -136,7 +137,11 @@ export class Table implements OnInit {
     this.tableService.playCard(card);
     this.addPlayedCard(card);
     if (this.playedCards().length === 4) {
-      this.tableService.handleTrickCompletion(this.playedCards());
+      const biddingColor = this.contract()?.color;
+      this.tableService.handleTrickCompletion(
+        this.playedCards(),
+        biddingColor != null ? BiddingColorToCardColorMap.get(biddingColor) : undefined,
+      );
       this.whichHandsTurn.set(this.tableService.playedTricks().slice(-1)[0].winner!);
     } else {
       this.changePlayerTurn();
