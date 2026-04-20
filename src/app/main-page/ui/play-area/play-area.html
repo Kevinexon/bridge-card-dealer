@@ -1,5 +1,5 @@
 <div class="w-full h-full">
-  <div class="m-auto h-72 w-56 relative">
+  <div class="m-auto h-120 w-100 relative">
     @for (item of playedCards(); track $index) {
       @switch (item.hand) {
         @case ('North') {
@@ -7,7 +7,7 @@
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
-            class="absolute h-48 border border-gray-500 rounded-md w-32 top-0 left-16"
+            class="absolute h-48 border border-gray-500 rounded-md w-32 top-0 left-34"
           />
         }
         @case ('South') {
@@ -15,7 +15,7 @@
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
-            class="absolute h-48 border border-gray-500 rounded-md w-32 bottom-0 right-10"
+            class="absolute h-48 border border-gray-500 rounded-md w-32 bottom-0 right-34"
           />
         }
         @case ('East') {
@@ -23,7 +23,7 @@
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
-            class="absolute h-48 border border-gray-500 rounded-md w-32 top-14 right-0"
+            class="absolute h-48 border border-gray-500 rounded-md w-32 top-36 right-0"
           />
         }
         @case ('West') {
@@ -31,7 +31,7 @@
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
-            class="absolute h-48 border border-gray-500 rounded-md w-32 top-10 left-0"
+            class="absolute h-48 border border-gray-500 rounded-md w-32 top-36 left-0"
           />
         }
       }
