@@ -5,6 +5,12 @@
     </span>
 
     <div class="value-column">
+      @if (colSpans() > 0) {
+        <div>
+          <span class="text-gray-300">-</span>
+        </div>
+      }
+
       @for (item of northHistory(); track $index) {
         <div>
           {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
@@ -17,6 +23,11 @@
     <span class="hand-name-label non-vulnerable" [class.vulnerable]="isEWVulnerable()"> East </span>
 
     <div class="value-column">
+      @if (colSpans() > 1) {
+        <div>
+          <span class="text-gray-300">-</span>
+        </div>
+      }
       @for (item of eastHistory(); track $index) {
         <div>
           {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
@@ -31,6 +42,11 @@
     </span>
 
     <div class="value-column">
+      @if (colSpans() > 2) {
+        <div>
+          <span class="text-gray-300">-</span>
+        </div>
+      }
       @for (item of southHistory(); track $index) {
         <div>
           {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>

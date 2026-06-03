@@ -16,4 +16,10 @@ export class BiddingTable {
   eastHistory = computed(() => this.biddingHistory().filter((bid) => bid.bidder === 'East'));
   southHistory = computed(() => this.biddingHistory().filter((bid) => bid.bidder === 'South'));
   westHistory = computed(() => this.biddingHistory().filter((bid) => bid.bidder === 'West'));
+
+  colSpans = computed(() => {
+    const colSpans = { North: 0, East: 1, South: 2, West: 3 };
+    const firstHand = this.biddingHistory()[0]?.bidder;
+    return firstHand == null ? 0 : colSpans[firstHand];
+  });
 }
