@@ -123,6 +123,7 @@ export class BiddingPanel {
       this.onBidding.emit(
         createBidding(this.handTurn(), this.selectedLevel() as BiddingValue, color),
       );
+
       this.selectedLevel.set(null);
     }
   }
