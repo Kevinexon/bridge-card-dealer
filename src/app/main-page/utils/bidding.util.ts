@@ -10,6 +10,7 @@ export interface Bidding {
   biddingValue: BiddingValue;
   color?: BiddingColor;
   suit?: '♠' | '♥' | '♦' | '♣' | 'BA';
+  alertInfo?: string;
 }
 
 export interface Contract extends Bidding {

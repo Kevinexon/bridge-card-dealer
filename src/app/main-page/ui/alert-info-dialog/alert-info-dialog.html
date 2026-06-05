@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>
+  Alert {{ data.biddingValue }} <span [class]="data.color">{{ data.suit }}</span>
+</h2>
+<mat-dialog-content>
+  <mat-form-field class="w-md">
+    <mat-label>Wyjaśnienie</mat-label>
+    <textarea matInput [(ngModel)]="alertInfo"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton (click)="onNoClick()">Anuluj</button>
+  <button matButton="filled" [mat-dialog-close]="alertInfo()" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

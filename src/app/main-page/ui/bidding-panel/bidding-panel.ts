@@ -1,4 +1,13 @@
-import { Component, computed, input, output, Signal, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  InputSignal,
+  output,
+  Signal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
@@ -26,6 +35,7 @@ import { HandName } from '../../utils/card.util';
 export class BiddingPanel {
   handTurn = input.required<HandName>();
   biddingHistory = input.required<Bidding[]>();
+  number: InputSignal<number> = input.required();
 
   onBidding = output<Bidding>();
 
@@ -90,7 +100,7 @@ export class BiddingPanel {
     if (selectedLevel > minLevel) {
       return -1;
     }
-    return lastColorSeniority;
+    return lastColorSeniority === 5 ? -1 : lastColorSeniority;
   });
 
   selectNotValue(isDisabled: boolean, value: BiddingValue) {
@@ -99,6 +109,7 @@ export class BiddingPanel {
         createBidding(this.handTurn(), value, specialBiddingValueColorMap.get(value)),
       );
     }
+    this.selectedLevel.set(null);
   }
 
   selectLevel(isDisabled: boolean, level: number): void {
@@ -107,8 +118,8 @@ export class BiddingPanel {
     }
   }
 
-  selectColor(color: BiddingColor) {
-    if (this.selectedLevel() !== null) {
+  selectColor(isDisabled: boolean, color: BiddingColor) {
+    if (!isDisabled && this.selectedLevel() !== null) {
       this.onBidding.emit(
         createBidding(this.handTurn(), this.selectedLevel() as BiddingValue, color),
       );

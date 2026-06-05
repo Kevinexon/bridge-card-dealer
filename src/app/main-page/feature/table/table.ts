@@ -115,6 +115,10 @@ export class Table implements OnInit {
     this.changePlayerTurn();
   }
 
+  addAlertInfo(event: Bidding) {
+    // this.biddingHistory.set([...this.biddingHistory()]);
+  }
+
   onMoveCard(event: { card: Card; targetHand: HandName }) {
     this.tableService.moveCard(event.targetHand, event.card);
   }

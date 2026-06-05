@@ -12,8 +12,14 @@
       }
 
       @for (item of northHistory(); track $index) {
-        <div>
-          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        <div class="mt-1">
+          <span
+            matBadge="{{ item.alertInfo ? '!' : null }}"
+            class="bidding-value"
+            (click)="openAlertDialog(item)"
+          >
+            {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+          </span>
         </div>
       }
     </div>
@@ -29,8 +35,14 @@
         </div>
       }
       @for (item of eastHistory(); track $index) {
-        <div>
-          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        <div class="mt-1">
+          <span
+            matBadge="{{ item.alertInfo ? '!' : null }}"
+            class="bidding-value"
+            (click)="openAlertDialog(item)"
+          >
+            {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+          </span>
         </div>
       }
     </div>
@@ -48,8 +60,14 @@
         </div>
       }
       @for (item of southHistory(); track $index) {
-        <div>
-          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        <div class="mt-1">
+          <span
+            matBadge="{{ item.alertInfo ? '!' : null }}"
+            class="bidding-value"
+            (click)="openAlertDialog(item)"
+          >
+            {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+          </span>
         </div>
       }
     </div>
@@ -60,8 +78,14 @@
 
     <div class="value-column">
       @for (item of westHistory(); track $index) {
-        <div>
-          {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+        <div class="mt-1">
+          <span
+            matBadge="{{ item.alertInfo ? '!' : null }}"
+            class="bidding-value"
+            (click)="openAlertDialog(item)"
+          >
+            {{ item.biddingValue }} <span [class]="item.color">{{ item.suit }}</span>
+          </span>
         </div>
       }
     </div>

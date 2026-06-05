@@ -1,11 +1,14 @@
 <div class="flex flex-wrap p-4 min-h-240 h-screen">
   <div class="flex w-full items-start h-1/3">
     <div class="flex-1 p-4">
-      <app-bidding-table
-        [biddingHistory]="biddingHistory()"
-        [isNSVulnerable]="isNsVulnerable()"
-        [isEWVulnerable]="isEwVulnerable()"
-      />
+      @if (!biddingFase()) {
+        <app-bidding-table
+          [biddingHistory]="biddingHistory()"
+          [isNSVulnerable]="isNsVulnerable()"
+          [isEWVulnerable]="isEwVulnerable()"
+          (addAlertInfo)="addAlertInfo($event)"
+        />
+      }
     </div>
 
     <div class="w-1/3 p-4">
@@ -53,10 +56,11 @@
 
     <div class="flex-1 p-4">
       @if (biddingFase()) {
-        <app-bidding-panel
-          [handTurn]="whichHandsTurn()"
+        <app-bidding-table
           [biddingHistory]="biddingHistory()"
-          (onBidding)="onBidding($event)"
+          [isNSVulnerable]="isNsVulnerable()"
+          [isEWVulnerable]="isEwVulnerable()"
+          (addAlertInfo)="addAlertInfo($event)"
         />
       } @else {
         <app-play-area [playedCards]="playedCards()" />
@@ -81,11 +85,20 @@
 
   <div class="flex w-full items-end h-1/3">
     <div class="flex-1 p-4">
-      <app-tricks-count
-        [number]="number()"
-        [playedTricks]="playedTricks()"
-        [contract]="contract() ?? undefined"
-      />
+      @if (biddingFase()) {
+        <app-bidding-panel
+          [number]="number()"
+          [handTurn]="whichHandsTurn()"
+          [biddingHistory]="biddingHistory()"
+          (onBidding)="onBidding($event)"
+        />
+      } @else {
+        <app-tricks-count
+          [number]="number()"
+          [playedTricks]="playedTricks()"
+          [contract]="contract() ?? undefined"
+        />
+      }
     </div>
 
     <div class="w-1/3 p-4">

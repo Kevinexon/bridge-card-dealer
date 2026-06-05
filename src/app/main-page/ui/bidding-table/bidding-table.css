@@ -7,3 +7,11 @@
 .value-column{
     @apply mt-2 font-bold text-lg;
 }
+
+.bidding-value{
+    @apply p-1 rounded-xl;
+}
+
+.bidding-value:hover{
+    @apply bg-gray-400 cursor-pointer;
+}
