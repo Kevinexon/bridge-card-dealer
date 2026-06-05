@@ -33,9 +33,9 @@ import { HandName } from '../../utils/card.util';
   styleUrl: './bidding-panel.css',
 })
 export class BiddingPanel {
-  handTurn = input.required<HandName>();
-  biddingHistory = input.required<Bidding[]>();
   number: InputSignal<number> = input.required();
+  biddingHistory = input.required<Bidding[]>();
+  handTurn = input.required<HandName>();
 
   onBidding = output<Bidding>();
 
