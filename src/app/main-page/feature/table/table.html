@@ -6,7 +6,7 @@
           [biddingHistory]="biddingHistory()"
           [isNSVulnerable]="isNsVulnerable()"
           [isEWVulnerable]="isEwVulnerable()"
-          (addAlertInfo)="addAlertInfo($event)"
+          (addAlertInfo)="addAlertInfo()"
         />
       }
     </div>
@@ -27,14 +27,7 @@
     </div>
 
     <div class="flex-1 p-4">
-      <app-top-admin-panel
-        [(dealer)]="dealer"
-        [(linesVulnerable)]="linesVulnerable"
-        [(number)]="number"
-        [(editMode)]="cardsMovementEnabled"
-        (onDealNew)="dealNewDeck()"
-        (onReset)="reset()"
-      />
+      <app-alert-panel [alertedBiddings]="alertedBiddings()" />
     </div>
   </div>
 
@@ -60,7 +53,7 @@
           [biddingHistory]="biddingHistory()"
           [isNSVulnerable]="isNsVulnerable()"
           [isEWVulnerable]="isEwVulnerable()"
-          (addAlertInfo)="addAlertInfo($event)"
+          (addAlertInfo)="addAlertInfo()"
         />
       } @else {
         <app-play-area [playedCards]="playedCards()" />
@@ -116,8 +109,14 @@
       />
     </div>
 
-    <div class="flex-1 p-4 flex justify-end">
-      <app-bottom-admin-panel
+    <div class="flex-1 p-4">
+      <app-admin-panel
+        [(dealer)]="dealer"
+        [(linesVulnerable)]="linesVulnerable"
+        [(number)]="number"
+        [(editMode)]="cardsMovementEnabled"
+        (onDealNew)="dealNewDeck()"
+        (onReset)="reset()"
         (undoBid)="onUndoBid()"
         (resetBidding)="resetBidding()"
         (undoCard)="onUndoCard()"

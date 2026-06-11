@@ -1,33 +1,41 @@
 import { Component, model, output, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { HandName } from '../../utils/card.util';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { HandName } from '../../utils/card.util';
 
 @Component({
-  selector: 'app-top-admin-panel',
+  selector: 'app-admin-panel',
   imports: [
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    MatIconModule,
+    MatTabsModule,
     FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDividerModule,
     MatFormFieldModule,
+    MatButtonToggleModule,
     MatInputModule,
+    MatSlideToggleModule,
   ],
-  templateUrl: './top-admin-panel.html',
-  styleUrl: './top-admin-panel.css',
+  templateUrl: './admin-panel.html',
 })
-export class TopAdminPanel {
+export class AdminPanel {
   linesVulnerable = model.required<('NS' | 'WE')[]>();
   dealer = model.required<HandName>();
   number = model.required<number>();
   editMode = model.required<boolean>();
 
+  undoBid = output();
+  resetBidding = output();
+  undoCard = output();
+  undoTrick = output();
+  resetPlayedCards = output();
   onReset = output();
   onDealNew = output();
 

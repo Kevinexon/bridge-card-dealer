@@ -10,12 +10,11 @@ import {
   Signal,
   WritableSignal,
 } from '@angular/core';
+import { AdminPanel } from '../../ui/admin-panel/admin-panel';
 import { BiddingPanel } from '../../ui/bidding-panel/bidding-panel';
 import { BiddingTable } from '../../ui/bidding-table/bidding-table';
-import { BottomAdminPanel } from '../../ui/bottom-admin-panel/bottom-admin-panel';
 import { Hand } from '../../ui/hand/hand';
 import { PlayArea } from '../../ui/play-area/play-area';
-import { TopAdminPanel } from '../../ui/top-admin-panel/top-admin-panel';
 import { TricksCount } from '../../ui/tricks-count/tricks-count';
 import {
   Bidding,
@@ -29,18 +28,11 @@ import {
 } from '../../utils/bidding.util';
 import { Card, HandName } from '../../utils/card.util';
 import { TableService } from '../../utils/services/table-service';
+import { AlertPanel } from '../../ui/alert-panel/alert-panel';
 
 @Component({
   selector: 'app-table',
-  imports: [
-    Hand,
-    PlayArea,
-    TricksCount,
-    BiddingTable,
-    BiddingPanel,
-    TopAdminPanel,
-    BottomAdminPanel,
-  ],
+  imports: [Hand, PlayArea, TricksCount, BiddingTable, BiddingPanel, AdminPanel, AlertPanel],
   providers: [TableService],
   templateUrl: './table.html',
   styleUrl: './table.css',
@@ -89,6 +81,10 @@ export class Table implements OnInit {
 
   biddingFase = computed(() => this.contract() == null);
 
+  alertedBiddings = computed(() => {
+    return this.biddingHistory().filter((b) => b.alertInfo);
+  });
+
   ngOnInit(): void {
     this.tableService.dealNewDeck();
   }
@@ -115,8 +111,8 @@ export class Table implements OnInit {
     this.changePlayerTurn();
   }
 
-  addAlertInfo(event: Bidding) {
-    // this.biddingHistory.set([...this.biddingHistory()]);
+  addAlertInfo() {
+    this.biddingHistory.set([...this.biddingHistory()]);
   }
 
   onMoveCard(event: { card: Card; targetHand: HandName }) {
