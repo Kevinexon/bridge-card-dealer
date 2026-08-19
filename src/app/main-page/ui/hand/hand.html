@@ -1,5 +1,6 @@
 <div
   [id]="handName()"
+  [attr.data-testid]="'hand-' + handName()"
   cdkDropList
   [cdkDropListData]="sortedHandDeck()"
   cdkDropListOrientation="horizontal"
@@ -16,6 +17,7 @@
           <img
             [src]="hideCards() ? reverseUrl() : item.imgUrl"
             [alt]="item.color + ' ' + item.name"
+            [attr.data-testid]="'card-' + item.color + '-' + item.name"
             class="absolute h-full border border-gray-500 cursor-pointer rounded-md w-32 max-w-32 hover:bottom-1"
             (click)="cardPlayed(item)"
             [cdkDragDisabled]="!canMoveCards()"
@@ -47,7 +49,11 @@
     }
 
     <div class="absolute right-2 top-1">
-      <button matIconButton (click)="changeVisibility()">
+      <button
+        matIconButton
+        [attr.data-testid]="'hand-' + handName() + '-visibility'"
+        (click)="changeVisibility()"
+      >
         <mat-icon>visibility</mat-icon>
       </button>
     </div>
