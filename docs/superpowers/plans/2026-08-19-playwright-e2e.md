@@ -24,19 +24,19 @@
 
 ## Struktura plików
 
-| Plik | Odpowiedzialność |
-| --- | --- |
-| `.prettierignore` | wyłączenia formatowania |
-| `playwright.config.ts` | konfiguracja runnera, webServer, viewport |
-| `e2e/tsconfig.json` | wsparcie edytora dla testów e2e (poza `tsconfig.app.json`) |
-| `e2e/pages/table.page.ts` | Page Object — jedyne miejsce znające `data-testid` |
-| `e2e/smoke.spec.ts` | stan startowy aplikacji |
-| `e2e/bidding.spec.ts` | licytacja |
-| `e2e/play.spec.ts` | rozgrywka |
-| `e2e/trainer.spec.ts` | tryb edycji, zakrywanie rąk, alerty, panel |
-| `src/app/main-page/utils/card.util.spec.ts` | testy talii i kart |
-| `src/app/main-page/utils/bidding.util.spec.ts` | testy reguł licytacji |
-| `scripts/testids.mjs` | weryfikacja spójności kontraktu testid |
+| Plik                                           | Odpowiedzialność                                           |
+| ---------------------------------------------- | ---------------------------------------------------------- |
+| `.prettierignore`                              | wyłączenia formatowania                                    |
+| `playwright.config.ts`                         | konfiguracja runnera, webServer, viewport                  |
+| `e2e/tsconfig.json`                            | wsparcie edytora dla testów e2e (poza `tsconfig.app.json`) |
+| `e2e/pages/table.page.ts`                      | Page Object — jedyne miejsce znające `data-testid`         |
+| `e2e/smoke.spec.ts`                            | stan startowy aplikacji                                    |
+| `e2e/bidding.spec.ts`                          | licytacja                                                  |
+| `e2e/play.spec.ts`                             | rozgrywka                                                  |
+| `e2e/trainer.spec.ts`                          | tryb edycji, zakrywanie rąk, alerty, panel                 |
+| `src/app/main-page/utils/card.util.spec.ts`    | testy talii i kart                                         |
+| `src/app/main-page/utils/bidding.util.spec.ts` | testy reguł licytacji                                      |
+| `scripts/testids.mjs`                          | weryfikacja spójności kontraktu testid                     |
 
 Cała wiedza o selektorach jest **wyłącznie** w `table.page.ts`. Pliki `*.spec.ts` w `e2e/` nie mogą zawierać ani jednego `getByTestId` — inaczej refaktor przestanie być bezpieczny.
 
@@ -45,10 +45,12 @@ Cała wiedza o selektorach jest **wyłącznie** w `table.page.ts`. Pliki `*.spec
 ### Task 1: Prettier
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `.prettierignore`
 
 **Interfaces:**
+
 - Produces: skrypty `npm run format` i `npm run format:check` używane w kryteriach akceptacji wszystkich kolejnych zadań.
 
 - [ ] **Step 1: Zainstaluj Prettiera**
@@ -108,10 +110,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 2: Testy jednostkowe `card.util` i usunięcie martwych speców
 
 **Files:**
+
 - Create: `src/app/main-page/utils/card.util.spec.ts`
 - Delete: `src/app/app.spec.ts`, `src/app/main-page/feature/table/table.spec.ts`, `src/app/main-page/ui/bidding-table/bidding-table.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `createCard`, `createDeck` z `card.util.ts`.
 - Produces: nic dla kolejnych zadań.
 
@@ -222,9 +226,11 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 3: Testy jednostkowe `bidding.util`
 
 **Files:**
+
 - Create: `src/app/main-page/utils/bidding.util.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `createBidding`, `createContract`, `lastNotPass`, `isLastBidderEnemy`, `calculateMinLevel`, `lastBiddedColorSeniority`, `isBiddingFaseOver`, `findHighestBid`, `findDeclarer`, `isContractDoubledOrRedubled`, typ `Bidding` — wszystko z `bidding.util.ts`.
 - Produces: nic dla kolejnych zadań.
 
@@ -469,10 +475,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 4: Infrastruktura Playwright
 
 **Files:**
+
 - Create: `playwright.config.ts`, `e2e/tsconfig.json`, `e2e/smoke.spec.ts`
 - Modify: `package.json`, `.gitignore`
 
 **Interfaces:**
+
 - Produces: `npm run e2e`; `baseURL` `http://localhost:4200`; katalog `e2e/` jako `testDir`. Wszystkie kolejne zadania dodają pliki do `e2e/`.
 
 - [ ] **Step 1: Zainstaluj Playwrighta**
@@ -589,10 +597,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 5: Page Object + testidy rąk i kart
 
 **Files:**
+
 - Create: `e2e/pages/table.page.ts`
 - Modify: `src/app/main-page/ui/hand/hand.html`, `e2e/smoke.spec.ts`
 
 **Interfaces:**
+
 - Produces: klasa `TablePage` używana we wszystkich kolejnych zadaniach. Typy eksportowane z tego pliku: `Seat = 'North' | 'East' | 'South' | 'West'`, `Suit = 'spades' | 'hearts' | 'diamonds' | 'clubs'`, `Rank = '2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'J'|'Q'|'K'|'A'`, stała `SEATS: readonly Seat[]`. Metody: `goto()`, `hand(seat)`, `card(suit, rank)`, `expectHandSize(seat, n)`, `expectTurn(seat)`, `toggleHandVisibility(seat)`, `dragCard(suit, rank, {to})`.
 
 - [ ] **Step 1: Napisz test, który jeszcze nie ma jak przejść**
@@ -755,10 +765,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 6: Licytacja
 
 **Files:**
+
 - Create: `e2e/bidding.spec.ts`
 - Modify: `e2e/pages/table.page.ts`, `src/app/main-page/ui/bidding-panel/bidding-panel.html`, `src/app/main-page/ui/bidding-table/bidding-table.html`, `src/app/main-page/ui/admin-panel/admin-panel.html`, `src/app/main-page/ui/tricks-count/tricks-count.html`
 
 **Interfaces:**
+
 - Consumes: `TablePage`, `Seat`, `BidSuit`, `SEATS` z Tasku 5.
 - Produces: metody `TablePage`: `bidLevelButton(level)`, `bidSuit(suit)`, `doubleButton()`, `redoubleButton()`, `biddingColumn(seat)`, `contractDisplay()`, `bidLevel(level)`, `bid(level, suit)`, `pass()`, `double()`, `redouble()`, `openAdminTab(name)`, `undoBid()`, `resetBidding()`, `setDealer(seat)`.
 
@@ -1037,10 +1049,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 7: Rozgrywka
 
 **Files:**
+
 - Create: `e2e/play.spec.ts`
 - Modify: `e2e/pages/table.page.ts`, `src/app/main-page/ui/play-area/play-area.html`, `src/app/main-page/ui/tricks-count/tricks-count.html`
 
 **Interfaces:**
+
 - Consumes: `TablePage` z Tasków 5-6.
 - Produces: metody `playedCard(seat)`, `playCard(suit, rank)`, `seatOnTurn()`, `playFromSeat(seat)`, `playRoundOfHighestCards()`, `bidToContract(level, suit)`, `expectTricks({ns, ew})`, `undoCard()`, `undoTrick()`, `resetPlay()`.
 
@@ -1242,10 +1256,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 8: Tryb trenera
 
 **Files:**
+
 - Create: `e2e/trainer.spec.ts`
 - Modify: `e2e/pages/table.page.ts`, `src/app/main-page/ui/admin-panel/admin-panel.html`, `src/app/main-page/ui/alert-info-dialog/alert-info-dialog.html`, `src/app/main-page/ui/alert-panel/alert-panel.html`, `src/app/main-page/ui/bidding-panel/bidding-panel.html`
 
 **Interfaces:**
+
 - Consumes: `TablePage` z Tasków 5-7.
 - Produces: metody `enableEditMode()`, `dealNew()`, `setBoardNumber(n)`, `setVulnerable(line)`, `alertItems()`, `addAlert(seat, text)`, `expectVulnerable(seat, isVulnerable)`.
 
@@ -1402,11 +1418,13 @@ Expected: FAIL — `table.enableEditMode is not a function`.
 - [ ] **Step 5: Dodaj testidy do dialogu alertu i panelu alertów**
 
 W `alert-info-dialog.html`:
+
 - `data-testid="alert-input"` na `<textarea matInput>`
 - `data-testid="alert-confirm"` na przycisku „Ok"
 - `data-testid="alert-cancel"` na przycisku „Anuluj"
 
 W `alert-panel.html`:
+
 - `data-testid="alert-panel"` na zewnętrznym divie
 - `data-testid="alert-item"` na divie wewnątrz `@for`
 
@@ -1439,10 +1457,12 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 9: Skrypt weryfikacji kontraktu testid
 
 **Files:**
+
 - Create: `scripts/testids.mjs`
 - Modify: `package.json`
 
 **Interfaces:**
+
 - Consumes: `data-testid` w `src/**/*.html`, wywołania `getByTestId` w `e2e/**/*.ts`.
 - Produces: `npm run testids` (raport) oraz `npm run testids:check` (exit 1 przy rozjeździe).
 
@@ -1515,7 +1535,8 @@ const missing = [...used]
   .map(toPrefix)
   .filter(
     (id) =>
-      !literal.has(id) && ![...dynamic].some((prefix) => id.startsWith(prefix) || prefix.startsWith(id)),
+      !literal.has(id) &&
+      ![...dynamic].some((prefix) => id.startsWith(prefix) || prefix.startsWith(id)),
   )
   .sort();
 
@@ -1577,9 +1598,11 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 10: Weryfikacja końcowa
 
 **Files:**
+
 - Modify: `docs/superpowers/specs/2026-08-19-playwright-e2e-design.md`
 
 **Interfaces:**
+
 - Consumes: wszystko z Tasków 1-9.
 
 - [ ] **Step 1: Testy jednostkowe**

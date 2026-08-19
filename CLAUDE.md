@@ -93,7 +93,7 @@ Do not "fix" these incidentally — they are tracked and scheduled. See
    (`table.ts:227`); it should be the declarer's left-hand opponent, which is
    what `resetPlayedCards` does correctly.
 3. **Redoubled contracts report `isDoubled: false`.** `isDoubled ?? isRedubled ??
-   false` — `??` does not catch `false`. `bidding.util.ts:73`
+false` — `??` does not catch `false`. `bidding.util.ts:73`
 4. **`isContractDoubledOrRedubled` matches the contract on `biddingValue` +
    `bidder` only, ignoring suit**, so a double placed before the real contract
    can be miscounted. `bidding.util.ts:167`

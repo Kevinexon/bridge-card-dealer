@@ -142,21 +142,21 @@ ma pozostać stabilny.
 
 Nazwy są po angielsku i semantyczne — opisują rolę, nie wygląd.
 
-| Obszar | testid |
-| --- | --- |
-| Ręka | `hand-North`, `hand-East`, `hand-South`, `hand-West` |
-| Karta w ręce | `card-spades-A` (globalnie unikalne) |
-| Zakrycie ręki | `hand-North-visibility` |
-| Poziom odzywki | `bid-level-1` … `bid-level-7` |
-| Kolor odzywki | `bid-suit-clubs`, `bid-suit-diamonds`, `bid-suit-hearts`, `bid-suit-spades`, `bid-suit-NT` |
-| Odzywki specjalne | `bid-pass`, `bid-double`, `bid-redouble` |
-| Tabela licytacji | `bidding-table`, `bidding-column-North`, `bidding-entry` |
-| Karta na stole | `played-card-North` |
-| Licznik lew | `tricks-ns`, `tricks-ew`, `contract-display` |
-| Panel trenera | `admin-panel`, `admin-toggle`, `deal-new`, `edit-mode-toggle`, `board-number` |
-| Dealer i założenia | `dealer-North`, `vulnerable-NS`, `vulnerable-WE` |
-| Cofanie | `undo-bid`, `reset-bidding`, `undo-card`, `undo-trick`, `reset-play` |
-| Alerty | `alert-dialog`, `alert-input`, `alert-panel`, `alert-item` |
+| Obszar             | testid                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------ |
+| Ręka               | `hand-North`, `hand-East`, `hand-South`, `hand-West`                                       |
+| Karta w ręce       | `card-spades-A` (globalnie unikalne)                                                       |
+| Zakrycie ręki      | `hand-North-visibility`                                                                    |
+| Poziom odzywki     | `bid-level-1` … `bid-level-7`                                                              |
+| Kolor odzywki      | `bid-suit-clubs`, `bid-suit-diamonds`, `bid-suit-hearts`, `bid-suit-spades`, `bid-suit-NT` |
+| Odzywki specjalne  | `bid-pass`, `bid-double`, `bid-redouble`                                                   |
+| Tabela licytacji   | `bidding-table`, `bidding-column-North`, `bidding-entry`                                   |
+| Karta na stole     | `played-card-North`                                                                        |
+| Licznik lew        | `tricks-ns`, `tricks-ew`, `contract-display`                                               |
+| Panel trenera      | `admin-panel`, `admin-toggle`, `deal-new`, `edit-mode-toggle`, `board-number`              |
+| Dealer i założenia | `dealer-North`, `vulnerable-NS`, `vulnerable-WE`                                           |
+| Cofanie            | `undo-bid`, `reset-bidding`, `undo-card`, `undo-trick`, `reset-play`                       |
+| Alerty             | `alert-dialog`, `alert-input`, `alert-panel`, `alert-item`                                 |
 
 Karta jest w danym momencie albo w ręce, albo na stole — `isPlayed` filtruje ją
 z `sortedHandDeck`, więc `card-spades-A` nigdy nie występuje dwukrotnie.
@@ -277,8 +277,8 @@ Cel: ograniczyć koszt ponownego dochodzenia do tych samych wniosków w kolejnyc
 sesjach pracy z asystentem.
 
 Pomiar, na którym oparto decyzję: całe źródło to 50 KB / 1543 linie / 28 plików,
-czyli około 13-15k tokenów przy oknie kontekstu 200k. Jednorazowe przeczytanie
-projektu kosztuje więc ~7% kontekstu i **nie jest wąskim gardłem**. Wąskim
+czyli około 13-15k tokenów przy oknie kontekstu 1M. Jednorazowe przeczytanie
+projektu kosztuje więc ~1,5% kontekstu i **nie jest wąskim gardłem**. Wąskim
 gardłem jest powtarzanie analizy architektury w każdej nowej sesji (~25-30k
 tokenów za każdym razem). Dlatego odrzucono generyczne generatory inwentarza
 komponentów, grafy zależności signali i dumpy AST — przy tej skali kosztowałyby

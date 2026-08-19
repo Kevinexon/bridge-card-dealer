@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 .non-vulnerable {
   @apply bg-green-700;
@@ -11,43 +11,43 @@
 }
 
 .spades {
-    @apply text-[#000485]
+  @apply text-[#000485];
 }
 
 .hearts {
-    @apply text-[#f20000]
+  @apply text-[#f20000];
 }
 
 .diamonds {
-    @apply text-[#f52700]
+  @apply text-[#f52700];
 }
 
 .clubs {
-    @apply text-[#121212]
+  @apply text-[#121212];
 }
 
 .NT {
-    @apply text-blue-700;
+  @apply text-blue-700;
 }
 
 .pass {
-    @apply text-green-700
+  @apply text-green-700;
 }
 
 .double {
-    @apply text-red-500
+  @apply text-red-500;
 }
 
 .redouble {
-    @apply text-blue-700;
+  @apply text-blue-700;
 }
 
 .single-card-value {
-    padding: 0 0.125rem;
-    cursor: pointer;
+  padding: 0 0.125rem;
+  cursor: pointer;
 }
 
 .single-card-value:hover {
-    background: #E0E0E0;
-    border-radius: 5rem;
+  background: #e0e0e0;
+  border-radius: 5rem;
 }
