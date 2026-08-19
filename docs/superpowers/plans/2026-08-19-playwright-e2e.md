@@ -10,6 +10,51 @@
 
 **Spec:** `docs/superpowers/specs/2026-08-19-playwright-e2e-design.md`
 
+## Postęp
+
+Stan na 2026-08-19, gałąź `feature/playwright-e2e`.
+
+| Task                                    | Status          | Commit    |
+| --------------------------------------- | --------------- | --------- |
+| 1. Prettier                             | ✅ zrobione     | `79b369a` |
+| 2. Testy `card.util` + usunięcie speców | ✅ zrobione     | `0cb84a7` |
+| 3. Testy `bidding.util`                 | ✅ zrobione     | `455e942` |
+| 4. Infrastruktura Playwright            | ✅ zrobione     | `a4457c6` |
+| 5. Page Object + testidy rąk            | ✅ zrobione     | `e3521ad` |
+| 6. Licytacja e2e                        | ✅ zrobione     | `b7787c0` |
+| 7. Rozgrywka e2e                        | ⬜ **następne** |           |
+| 8. Tryb trenera e2e                     | ⬜              |           |
+| 9. Skrypt `testids.mjs`                 | ⬜              |           |
+| 10. Weryfikacja końcowa                 | ⬜              |           |
+
+Zweryfikowany stan po Tasku 6:
+
+```
+npm run e2e                  →  EXIT=0   12 passed | 1 skipped
+npx ng test --watch=false    →  EXIT=0   31 passed | 2 skipped
+npm run format:check         →  EXIT=0
+```
+
+**Ważna zmiana względem pierwotnego planu.** Krok weryfikacyjny w Tasku 6
+(zdjęcie `fixme` i sprawdzenie, czy testy naprawdę padają) obalił dwie z pięciu
+usterek opisanych w specu. Szczegóły w sekcji 10 specu; skrót:
+
+- „wyjście rozgrywającego zamiast LHO" **nie jest bugiem** — `onBidding`
+  wywołuje `changePlayerTurn()` zaraz po `endBiddingFase()`. Test usunięty.
+- bug rekontry jest realny w danych, ale **niewidoczny w UI** — zostaje tylko
+  test jednostkowy, test e2e usunięty jako bezprzedmiotowy.
+- pas w koło **rzuca `TypeError`, ale Angular go połyka** — test przepisany
+  z asercji na widoczność na asercję błędów konsoli.
+
+Skutek dla liczb w Taskach 7-10: `bidding.spec.ts` ma **8 testów + 1 `fixme`**,
+nie 8 + 3. Oczekiwane sumy w krokach weryfikacyjnych niższych zadań należy
+liczyć od tej bazy (12 passed + 1 skipped po Tasku 6).
+
+**Do rozstrzygnięcia w Tasku 8:** bug „martwy widok dziadka" opiera się
+wyłącznie na odczycie kodu, bez testu — czyli dokładnie tak samo jak obalona
+usterka o wyjściu. Zweryfikować empirycznie przed pozostawieniem go w
+dokumentacji.
+
 ## Global Constraints
 
 - Zmiany w `src/` ograniczają się do **dodania atrybutów `data-testid`** oraz usunięcia trzech plików `.spec.ts`. Żadnych zmian logiki, klas CSS, tekstów UI ani struktury DOM.
