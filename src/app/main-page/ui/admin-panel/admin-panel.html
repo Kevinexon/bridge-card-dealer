@@ -43,10 +43,10 @@
           <div class="mt-2">
             <span class="pr-4">Dealer:</span>
             <mat-button-toggle-group [(ngModel)]="dealer" (valueChange)="onReset.emit()">
-              <mat-button-toggle value="North">North</mat-button-toggle>
-              <mat-button-toggle value="East">East</mat-button-toggle>
-              <mat-button-toggle value="South">South</mat-button-toggle>
-              <mat-button-toggle value="West">West</mat-button-toggle>
+              <mat-button-toggle value="North" data-testid="dealer-North">North</mat-button-toggle>
+              <mat-button-toggle value="East" data-testid="dealer-East">East</mat-button-toggle>
+              <mat-button-toggle value="South" data-testid="dealer-South">South</mat-button-toggle>
+              <mat-button-toggle value="West" data-testid="dealer-West">West</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
         </section>
@@ -56,11 +56,21 @@
         <section [class.hidden]="isPanelHidden()" class="h-54">
           <p class="text-xl py-2">Licytacja</p>
           <div class="pb-4 pt-2">
-            <button matButton="outlined" class="mx-1" (click)="resetBidding.emit()">
+            <button
+              matButton="outlined"
+              class="mx-1"
+              data-testid="reset-bidding"
+              (click)="resetBidding.emit()"
+            >
               <mat-icon>undo</mat-icon>
               Cofnij licytacje
             </button>
-            <button matButton="outlined" class="mx-1" (click)="undoBid.emit()">
+            <button
+              matButton="outlined"
+              class="mx-1"
+              data-testid="undo-bid"
+              (click)="undoBid.emit()"
+            >
               <mat-icon>keyboard_arrow_left</mat-icon>
               Cofnij odzywkę
             </button>
@@ -70,17 +80,32 @@
 
           <p class="text-xl py-2">Rozgrywka</p>
           <div>
-            <button matButton="outlined" class="mx-1" (click)="resetPlayedCards.emit()">
+            <button
+              matButton="outlined"
+              class="mx-1"
+              data-testid="reset-play"
+              (click)="resetPlayedCards.emit()"
+            >
               <mat-icon>undo</mat-icon>
               Cofnij rogrywkę
             </button>
 
-            <button matButton="outlined" class="mx-1" (click)="undoTrick.emit()">
+            <button
+              matButton="outlined"
+              class="mx-1"
+              data-testid="undo-trick"
+              (click)="undoTrick.emit()"
+            >
               <mat-icon>keyboard_double_arrow_left</mat-icon>
               Cofnij lewę
             </button>
 
-            <button matButton="outlined" class="mx-1" (click)="undoCard.emit()">
+            <button
+              matButton="outlined"
+              class="mx-1"
+              data-testid="undo-card"
+              (click)="undoCard.emit()"
+            >
               <mat-icon>keyboard_arrow_left</mat-icon>
               Cofnij kartę
             </button>

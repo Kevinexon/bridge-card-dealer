@@ -9,11 +9,17 @@
   <mat-divider />
 
   <div class="flex py-2">
-    <div class="bidding-button" matRipple (click)="selectNotValue(false, 'PASS')">
+    <div
+      class="bidding-button"
+      data-testid="bid-pass"
+      matRipple
+      (click)="selectNotValue(false, 'PASS')"
+    >
       <span class="text-xl pass font-bold"> PASS </span>
     </div>
     <div
       class="bidding-button double"
+      data-testid="bid-double"
       [class.bidding-button-disabled]="doubleDisabled()"
       matRipple
       [matRippleDisabled]="doubleDisabled()"
@@ -23,6 +29,7 @@
     </div>
     <div
       class="bidding-button redouble"
+      data-testid="bid-redouble"
       [class.bidding-button-disabled]="redoubleDisabled()"
       matRipple
       [matRippleDisabled]="redoubleDisabled()"
@@ -38,6 +45,7 @@
     @for (level of levels(); track level) {
       <div
         class="bidding-button"
+        [attr.data-testid]="'bid-level-' + level"
         [class.bidding-button-selected]="selectedLevel() === level"
         [class.bidding-button-disabled]="minLevel() > level"
         matRipple
@@ -55,6 +63,7 @@
     @for (color of colors(); track color.name) {
       <div
         class="bidding-button"
+        [attr.data-testid]="'bid-suit-' + color.name"
         [class]="color.name === 'NT' ? `${color.name}` : `${color.name}`"
         [class.bidding-button-disabled]="lastColorSeniority() >= color.seniority"
         matRipple

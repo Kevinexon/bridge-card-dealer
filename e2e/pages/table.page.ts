@@ -45,6 +45,70 @@ export class TablePage {
     await this.page.getByTestId(`hand-${seat}-visibility`).click();
   }
 
+  bidLevelButton(level: number): Locator {
+    return this.page.getByTestId(`bid-level-${level}`);
+  }
+
+  bidSuit(suit: BidSuit): Locator {
+    return this.page.getByTestId(`bid-suit-${suit}`);
+  }
+
+  doubleButton(): Locator {
+    return this.page.getByTestId('bid-double');
+  }
+
+  redoubleButton(): Locator {
+    return this.page.getByTestId('bid-redouble');
+  }
+
+  biddingColumn(seat: Seat): Locator {
+    return this.page.getByTestId(`bidding-column-${seat}`);
+  }
+
+  contractDisplay(): Locator {
+    return this.page.getByTestId('contract-display');
+  }
+
+  async bidLevel(level: number): Promise<void> {
+    await this.bidLevelButton(level).click();
+  }
+
+  async bid(level: number, suit: BidSuit): Promise<void> {
+    await this.bidLevel(level);
+    await this.bidSuit(suit).click();
+  }
+
+  async pass(): Promise<void> {
+    await this.page.getByTestId('bid-pass').click();
+  }
+
+  async double(): Promise<void> {
+    await this.doubleButton().click();
+  }
+
+  async redouble(): Promise<void> {
+    await this.redoubleButton().click();
+  }
+
+  async openAdminTab(name: 'Rozdanie' | 'Cofnij'): Promise<void> {
+    await this.page.getByRole('tab', { name }).click();
+  }
+
+  async undoBid(): Promise<void> {
+    await this.openAdminTab('Cofnij');
+    await this.page.getByTestId('undo-bid').click();
+  }
+
+  async resetBidding(): Promise<void> {
+    await this.openAdminTab('Cofnij');
+    await this.page.getByTestId('reset-bidding').click();
+  }
+
+  async setDealer(seat: Seat): Promise<void> {
+    await this.openAdminTab('Rozdanie');
+    await this.page.getByTestId(`dealer-${seat}`).click();
+  }
+
   async dragCard(suit: Suit, rank: Rank, options: { to: Seat }): Promise<void> {
     const from = await this.card(suit, rank).boundingBox();
     const to = await this.hand(options.to).boundingBox();

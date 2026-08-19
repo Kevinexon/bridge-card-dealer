@@ -240,36 +240,47 @@ kilkudziesięciu asercji rozsianych po testach.
 
 ## 10. Obsługa znanych bugów
 
-Testy opisują **poprawne reguły brydżowe**. Pięć scenariuszy, które na obecnym
-kodzie nie przechodzą, oznaczamy `test.fixme()` z komentarzem wskazującym plik
-i linię. Suite pozostaje zielony, a bugi są udokumentowane jako wykonywalna
-specyfikacja. Naprawa każdego z nich w kolejnej fazie sprowadza się do
-usunięcia jednego `fixme`.
+Testy opisują **poprawne reguły brydżowe**. Scenariusze, które na obecnym
+kodzie nie przechodzą, oznaczamy `test.fixme()` (e2e) lub `it.skip()`
+(jednostkowe) z komentarzem wskazującym plik i linię. Suite pozostaje zielony,
+a bugi są udokumentowane jako wykonywalna specyfikacja. Naprawa każdego z nich
+sprowadza się do usunięcia jednego znacznika.
 
 Alternatywa — utrwalenie obecnego, błędnego zachowania — zamieniłaby testy w
 cement na bugach i została odrzucona.
 
-Lista do oznaczenia:
+**Każdy wpis poniżej został zweryfikowany empirycznie: znacznik zdjęty, test
+uruchomiony, upadek potwierdzony.** Pierwotna lista z analizy zawierała pięć
+pozycji; dwie z nich weryfikacja obaliła lub zawęziła (patrz na końcu sekcji).
 
-1. **Pas w koło powoduje crash.** `isBiddingFaseOver` przy czterech pasach
+1. **Pas w koło rzuca wyjątkiem.** `isBiddingFaseOver` przy czterech pasach
    zwraca `true`, `findHighestBid` zwraca `undefined`, a `findDeclarer` czyta
-   `.bidder` z `undefined`. `bidding.util.ts:136-146`
-2. **Po licytacji wychodzi rozgrywający zamiast gracza po jego lewej.**
-   `endBiddingFase` ustawia turę na `declarer` (`table.ts:227`), podczas gdy
-   `resetPlayedCards` stosuje poprawną regułę.
-3. **Kontrakt z rekontrą ma `isDoubled: false`.** Operator `??` nie łapie
-   wartości `false`, bo `false` nie jest nullish. `bidding.util.ts:73`
-4. **`isContractDoubledOrRedubled` identyfikuje kontrakt po `biddingValue` i
+   z tego `.bidder`. Zaobserwowany błąd:
+   `TypeError: Cannot read properties of undefined (reading 'bidder')`.
+   Globalny handler Angulara przechwytuje wyjątek, więc **aplikacja nie znika
+   z ekranu** — kontrakt po prostu nigdy nie powstaje. Test musi więc sprawdzać
+   błędy w konsoli, a nie widoczność elementów; asercja na ukryty kontrakt
+   przechodzi trywialnie i nie wykrywa niczego.
+   `bidding.util.ts:136-146`, `table.ts:224-230`. Test e2e, `fixme`.
+2. **Kontrakt z rekontrą ma `isDoubled: false`.** Operator `??` nie łapie
+   wartości `false`, bo `false` nie jest nullish. `bidding.util.ts:73`.
+   Dziś **niewidoczne w UI**, bo `tricks-count.html` sprawdza `isRedubled`
+   przed `isDoubled`, więc XX renderuje się poprawnie mimo błędnej flagi.
+   Test jednostkowy, `it.skip` — e2e nie ma czego sprawdzać.
+3. **`isContractDoubledOrRedubled` identyfikuje kontrakt po `biddingValue` i
    `bidder`, bez koloru.** Przy sekwencji 1♣ … 1♠ tego samego gracza trafia w
    pierwszą odzywkę i może policzyć kontrę sprzed właściwego kontraktu.
-   `bidding.util.ts:167`
-5. **Widok dziadka jest martwy.** `hand.html:57-76` zawiera pełny layout ręki
-   dziadka rozłożonej w cztery kolumny, ale `table.html` nigdy nie przekazuje
-   inputu `isDummy`.
+   `bidding.util.ts:167`. Test jednostkowy, `it.skip`.
+4. **Widok dziadka jest martwy.** `hand.html` zawiera pełny layout ręki dziadka
+   rozłożonej w cztery kolumny, ale `table.html` nigdy nie przekazuje inputu
+   `isDummy`. Bez testu — to nie błąd zachowania, tylko funkcja nieuruchomiona,
+   a docelowe zachowanie nie zostało uzgodnione.
 
-Punkty 1–4 dostają test `fixme`. Punkt 5 nie jest błędem zachowania, tylko
-funkcją nieuruchomioną — zostaje odnotowany, ale bez testu, bo nie ma
-uzgodnionego docelowego zachowania.
+**Odrzucone po weryfikacji:** pierwotna analiza raportowała, że po licytacji
+wychodzi rozgrywający zamiast gracza po jego lewej, na podstawie odczytu
+`table.ts:227` w izolacji. Test e2e to obalił: `onBidding` wywołuje
+`changePlayerTurn()` bezpośrednio po `endBiddingFase()`, więc wyjście przypada
+poprawnie lewemu przeciwnikowi rozgrywającego. To nie jest bug.
 
 ## 11. Warstwa oszczędzania kontekstu
 

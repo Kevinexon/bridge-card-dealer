@@ -86,19 +86,27 @@ Nothing rejects an illegal bid that arrives by another path.
 Do not "fix" these incidentally — they are tracked and scheduled. See
 `docs/superpowers/specs/2026-08-19-playwright-e2e-design.md` section 10.
 
-1. **Passing out crashes.** Four passes make `isBiddingFaseOver` return true,
-   `findHighestBid` returns `undefined`, `findDeclarer` dereferences it.
-   `bidding.util.ts:136-146`
-2. **Wrong opening lead.** `endBiddingFase` sets the turn to the declarer
-   (`table.ts:227`); it should be the declarer's left-hand opponent, which is
-   what `resetPlayedCards` does correctly.
-3. **Redoubled contracts report `isDoubled: false`.** `isDoubled ?? isRedubled ??
-false` — `??` does not catch `false`. `bidding.util.ts:73`
-4. **`isContractDoubledOrRedubled` matches the contract on `biddingValue` +
+1. **Passing out throws.** Four passes make `isBiddingFaseOver` return true,
+   `findHighestBid` returns `undefined`, and `findDeclarer` dereferences it —
+   `TypeError: Cannot read properties of undefined (reading 'bidder')`. Angular's
+   global error handler swallows it, so the app stays on screen and simply never
+   produces a contract. Any test for this must assert on console errors, not on
+   what is visible. `bidding.util.ts:136-146`, `table.ts:224-230`
+2. **Redoubled contracts report `isDoubled: false`.** `isDoubled ?? isRedubled ?? false`
+   — `??` does not catch `false`. Currently invisible in the UI because
+   `tricks-count.html` tests `isRedubled` before `isDoubled`, so XX still renders;
+   the flag is wrong for any future consumer. `bidding.util.ts:73`
+3. **`isContractDoubledOrRedubled` matches the contract on `biddingValue` +
    `bidder` only, ignoring suit**, so a double placed before the real contract
    can be miscounted. `bidding.util.ts:167`
-5. **The dummy view is dead code.** `hand.html:57-76` implements a full
-   four-column dummy layout, but `table.html` never passes the `isDummy` input.
+4. **The dummy view is dead code.** `hand.html` implements a full four-column
+   dummy layout, but `table.html` never passes the `isDummy` input.
+
+**Not a bug, despite appearances:** `endBiddingFase` sets the turn to the
+declarer, but `onBidding` calls `changePlayerTurn()` immediately afterwards, so
+the opening lead correctly falls to the declarer's left-hand opponent. Reading
+`table.ts:227` in isolation suggests otherwise — it was reported as a bug once
+and disproved by an e2e test.
 
 ## Conventions
 
