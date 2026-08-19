@@ -64,6 +64,8 @@ W zakresie:
 - dodanie `prettier` do devDependencies i skryptu `npm run format` —
   konfiguracja Prettiera istnieje dziś w `package.json`, ale sam pakiet nie
   jest zainstalowany, więc kryterium formatowania jest obecnie niewykonalne
+- `CLAUDE.md` — utrwalenie wyników tej analizy w repozytorium (patrz sekcja 11)
+- `scripts/testids.mjs` — weryfikacja spójności kontraktu testid (sekcja 11)
 
 Poza zakresem tej fazy:
 
@@ -269,7 +271,32 @@ Punkty 1–4 dostają test `fixme`. Punkt 5 nie jest błędem zachowania, tylko
 funkcją nieuruchomioną — zostaje odnotowany, ale bez testu, bo nie ma
 uzgodnionego docelowego zachowania.
 
-## 11. Kryteria akceptacji
+## 11. Warstwa oszczędzania kontekstu
+
+Cel: ograniczyć koszt ponownego dochodzenia do tych samych wniosków w kolejnych
+sesjach pracy z asystentem.
+
+Pomiar, na którym oparto decyzję: całe źródło to 50 KB / 1543 linie / 28 plików,
+czyli około 13-15k tokenów przy oknie kontekstu 200k. Jednorazowe przeczytanie
+projektu kosztuje więc ~7% kontekstu i **nie jest wąskim gardłem**. Wąskim
+gardłem jest powtarzanie analizy architektury w każdej nowej sesji (~25-30k
+tokenów za każdym razem). Dlatego odrzucono generyczne generatory inwentarza
+komponentów, grafy zależności signali i dumpy AST — przy tej skali kosztowałyby
+w utrzymaniu więcej, niż oszczędzają.
+
+**`CLAUDE.md`** (powstaje przed implementacją) — mapa architektury, przepływ
+stanu, komendy, zachowania nieoczywiste, lista znanych bugów z odwołaniami do
+plików i linii, konwencje do zachowania. Plik ładowany automatycznie na starcie
+każdej sesji.
+
+**`scripts/testids.mjs`** (powstaje razem z atrybutami, w fazie e2e) — czyta
+wszystkie `data-testid` z `src/`, porównuje ze zbiorem używanym w `e2e/` i
+raportuje różnicę. Tryb `--check` kończy się kodem 1 przy rozjeździe, więc
+nadaje się do CI i do weryfikacji po refaktorze. Wartość jest podwójna:
+zabezpiecza poprawność kontraktu testowego, a przy okazji zastępuje czytanie
+kilkunastu szablonów trzema linijkami outputu.
+
+## 12. Kryteria akceptacji
 
 - `npm run e2e` przechodzi lokalnie na czysto sklonowanym repozytorium
 - `npm test` przechodzi i zwraca exit code 0
