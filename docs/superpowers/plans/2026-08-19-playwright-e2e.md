@@ -12,7 +12,7 @@
 
 ## Postęp
 
-Stan na 2026-08-19, gałąź `feature/playwright-e2e`.
+Stan na 2026-08-20, gałąź `feature/playwright-e2e`.
 
 | Task                                    | Status          | Commit    |
 | --------------------------------------- | --------------- | --------- |
@@ -22,8 +22,8 @@ Stan na 2026-08-19, gałąź `feature/playwright-e2e`.
 | 4. Infrastruktura Playwright            | ✅ zrobione     | `a4457c6` |
 | 5. Page Object + testidy rąk            | ✅ zrobione     | `e3521ad` |
 | 6. Licytacja e2e                        | ✅ zrobione     | `b7787c0` |
-| 7. Rozgrywka e2e                        | ⬜ **następne** |           |
-| 8. Tryb trenera e2e                     | ⬜              |           |
+| 7. Rozgrywka e2e                        | ✅ zrobione     | (ten)     |
+| 8. Tryb trenera e2e                     | ⬜ **następne** |           |
 | 9. Skrypt `testids.mjs`                 | ⬜              |           |
 | 10. Weryfikacja końcowa                 | ⬜              |           |
 
@@ -49,6 +49,17 @@ usterek opisanych w specu. Szczegóły w sekcji 10 specu; skrót:
 Skutek dla liczb w Taskach 7-10: `bidding.spec.ts` ma **8 testów + 1 `fixme`**,
 nie 8 + 3. Oczekiwane sumy w krokach weryfikacyjnych niższych zadań należy
 liczyć od tej bazy (12 passed + 1 skipped po Tasku 6).
+
+**Korekta po Tasku 7.** Weryfikacja obaliła kolejne założenie planu: testy
+rozgrywki napisano tak, jakby wychodził North, podczas gdy wychodzi East (lewy
+przeciwnik rozgrywającego — to samo zachowanie, które w Tasku 6 obroniło się
+przed zarzutem błędu). Test kontraktu bez atu dostał więc poprawne oczekiwanie
+EW 1:0, a test „przebitka" i „wyjście w atu" rozdzielono, bo w pierwotnej wersji
+oba sprawdzały ten sam przypadek. Doszedł też **piąty bug** (cofnięcie
+zakończonej lewy nie zmniejsza licznika, spec sekcja 10 punkt 5) — jego test
+jest oznaczony `fixme`.
+
+Nowa baza dla Tasków 8-10: **18 passed + 2 skipped**, nie 19 + 3.
 
 **Do rozstrzygnięcia w Tasku 8:** bug „martwy widok dziadka" opiera się
 wyłącznie na odczycie kodu, bez testu — czyli dokładnie tak samo jak obalona

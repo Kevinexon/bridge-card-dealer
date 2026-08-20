@@ -4,6 +4,7 @@
       @switch (item.hand) {
         @case ('North') {
           <img
+            data-testid="played-card-North"
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
@@ -12,6 +13,7 @@
         }
         @case ('South') {
           <img
+            data-testid="played-card-South"
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
@@ -20,6 +22,7 @@
         }
         @case ('East') {
           <img
+            data-testid="played-card-East"
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"
@@ -28,6 +31,7 @@
         }
         @case ('West') {
           <img
+            data-testid="played-card-West"
             [src]="item.imgUrl"
             [alt]="item.color + ' ' + item.name"
             [class]="`z-${$index}`"

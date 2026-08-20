@@ -101,6 +101,14 @@ Do not "fix" these incidentally — they are tracked and scheduled. See
    can be miscounted. `bidding.util.ts:167`
 4. **The dummy view is dead code.** `hand.html` implements a full four-column
    dummy layout, but `table.html` never passes the `isDummy` input.
+5. **Undoing a finished trick leaves the trick counter untouched.** A completed
+   trick stays in `playedCards` as a four-element array — the signal is only
+   cleared when a fifth card is played (`addPlayedCard`, `table.ts:216-222`).
+   So `onUndoTrick` mistakes a finished trick for a trick in progress: it
+   returns the four cards to the hands but never removes the entry from
+   `playedTricks`. A second click fixes the counter, having already returned the
+   cards. `onUndoCard` breaks the same way — three cards left on the table
+   against a counter of 1. `table.ts:169-181`, condition on `table.ts:170`
 
 **Not a bug, despite appearances:** `endBiddingFase` sets the turn to the
 declarer, but `onBidding` calls `changePlayerTurn()` immediately afterwards, so

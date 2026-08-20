@@ -275,6 +275,20 @@ pozycji; dwie z nich weryfikacja obaliła lub zawęziła (patrz na końcu sekcji
    rozłożonej w cztery kolumny, ale `table.html` nigdy nie przekazuje inputu
    `isDummy`. Bez testu — to nie błąd zachowania, tylko funkcja nieuruchomiona,
    a docelowe zachowanie nie zostało uzgodnione.
+5. **„Cofnij lewę" po zakończonej lewie nie zmniejsza licznika.** Zakończona
+   lewa zostaje w `playedCards` jako czteroelementowa tablica — sygnał jest
+   czyszczony dopiero przy zagraniu piątej karty (`addPlayedCard`,
+   `table.ts:216-222`). `onUndoTrick` rozpoznaje więc lewę zakończoną jako
+   „lewę w toku": zdejmuje cztery karty ze stołu i oddaje je do rąk, ale nie
+   usuwa wpisu z `playedTricks`. Licznik dalej pokazuje 1. Dopiero drugie
+   kliknięcie trafia w drugą gałąź i poprawia licznik — kartami, które wróciły
+   już przy pierwszym. Ta sama przyczyna psuje „Cofnij kartę": po pełnej lewie
+   zostają na stole trzy karty przy liczniku 1. Warunek w `table.ts:170`
+   (i `table.ts:152`) musiałby odróżniać `length < 4` od `length === 4`.
+   `table.ts:169-181`. Test e2e, `fixme`.
+
+   Znalezione w Tasku 7, nie w analizie statycznej — oba objawy zweryfikowane
+   przebiegiem w przeglądarce, nie odczytem kodu.
 
 **Odrzucone po weryfikacji:** pierwotna analiza raportowała, że po licytacji
 wychodzi rozgrywający zamiast gracza po jego lewej, na podstawie odczytu
