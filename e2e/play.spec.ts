@@ -65,11 +65,7 @@ test.describe('play', () => {
     await table.expectTurn(leader);
   });
 
-  // BUG: zakonczona lewa zostaje w playedCards jako czteroelementowa tablica,
-  // wiec onUndoTrick wpada w galaz "lewa w toku" — zdejmuje karty ze stolu, ale
-  // nie usuwa lewy z licznika. Dopiero drugie klikniecie poprawia licznik.
-  // table.ts:169-181, warunek w linii 170. Spec sekcja 10, punkt 5.
-  test.fixme('undoes a completed trick', async ({ page }) => {
+  test('undoes a completed trick', async ({ page }) => {
     const table = new TablePage(page);
     await table.goto();
     await table.bidToContract(1, 'spades');
@@ -77,7 +73,33 @@ test.describe('play', () => {
     await table.expectTricks({ ns: 1, ew: 0 });
 
     await table.undoTrick();
+
     await table.expectTricks({ ns: 0, ew: 0 });
+    for (const seat of SEATS) {
+      await expect(table.playedCard(seat)).toBeHidden();
+      await table.expectHandSize(seat, 13);
+    }
+  });
+
+  // Drugi objaw tej samej przyczyny co wyzej: po zakonczonej lewie "Cofnij
+  // karte" zdejmowalo czwarta karte ze stolu, ale zostawialo lewe w liczniku.
+  test('undoes the last card of a completed trick', async ({ page }) => {
+    const table = new TablePage(page);
+    await table.goto();
+    await table.bidToContract(1, 'spades');
+    const order = await table.playRoundOfHighestCards();
+    await table.expectTricks({ ns: 1, ew: 0 });
+
+    await table.undoCard();
+
+    const lastPlayer = order[3];
+    await table.expectTricks({ ns: 0, ew: 0 });
+    await expect(table.playedCard(lastPlayer)).toBeHidden();
+    for (const seat of order.slice(0, 3)) {
+      await expect(table.playedCard(seat)).toBeVisible();
+    }
+    await table.expectTurn(lastPlayer);
+    await table.expectHandSize(lastPlayer, 13);
   });
 
   test('resets the whole play', async ({ page }) => {

@@ -92,7 +92,7 @@ test.describe('bidding', () => {
     await expect(table.biddingColumn('North')).not.toContainText('1');
   });
 
-  test.fixme('does not crash when everyone passes', async ({ page }) => {
+  test('does not crash when everyone passes', async ({ page }) => {
     // Bug 1: findHighestBid zwraca undefined przy czterech pasach, a findDeclarer
     // czyta z tego .bidder. Angular lapie wyjatek globalnym handlerem, wiec
     // aplikacja nie znika z ekranu — dlatego test sprawdza konsole, a nie widok.

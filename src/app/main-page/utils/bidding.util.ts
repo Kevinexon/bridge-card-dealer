@@ -70,7 +70,7 @@ export function createContract(
   return {
     ...bid,
     declarer,
-    isDoubled: isDoubled ?? isRedubled ?? false,
+    isDoubled: (isDoubled ?? false) || (isRedubled ?? false),
     isRedubled: isRedubled ?? false,
   };
 }
@@ -133,7 +133,7 @@ function areLastBidsPASS(biddingHistory: Bidding[], count: number): boolean {
   return biddingHistory.slice(-count).every((bid) => bid.biddingValue === 'PASS');
 }
 
-export function findHighestBid(biddingHistory: Bidding[]): Bidding {
+export function findHighestBid(biddingHistory: Bidding[]): Bidding | undefined {
   return biddingHistory
     .filter(
       (bid) => bid.biddingValue !== 'PASS' && bid.biddingValue !== 'X' && bid.biddingValue !== 'XX',
@@ -165,7 +165,10 @@ export function isContractDoubledOrRedubled(
   highestBid: Bidding,
 ): null | 'X' | 'XX' {
   const contractIndex = biddingHistory.findIndex(
-    (bid) => bid.biddingValue === highestBid.biddingValue && bid.bidder === highestBid.bidder,
+    (bid) =>
+      bid.biddingValue === highestBid.biddingValue &&
+      bid.bidder === highestBid.bidder &&
+      bid.color === highestBid.color,
   );
   const biddingAfterContract = biddingHistory.slice(contractIndex);
   return biddingAfterContract.find((b) => b.biddingValue === 'XX') != null

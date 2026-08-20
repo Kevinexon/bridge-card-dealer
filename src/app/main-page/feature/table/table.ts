@@ -149,7 +149,7 @@ export class Table implements OnInit {
   }
 
   onUndoCard() {
-    if (this.playedCards().length > 0) {
+    if (this.isTrickInProgress()) {
       const lastCard = this.playedCards().slice(-1)[0];
       lastCard.isPlayed = false;
       this.playedCards().splice(this.playedCards().length - 1);
@@ -160,14 +160,14 @@ export class Table implements OnInit {
       const lastPlayer = lastTrick.playedCards[3].hand;
       lastTrick.playedCards[3].isPlayed = false;
       lastTrick.playedCards.splice(3);
-      this.playedCards.set(lastTrick.playedCards);
+      this.playedCards.set([...lastTrick.playedCards]);
       this.whichHandsTurn.set(lastPlayer);
     }
     this.tableService.refreshDeck();
   }
 
   onUndoTrick() {
-    if (this.playedCards().length > 0) {
+    if (this.isTrickInProgress()) {
       const firstPlayer = this.playedCards()[0].hand;
       this.playedCards().forEach((c) => (c.isPlayed = false));
       this.playedCards.set([]);
@@ -176,8 +176,18 @@ export class Table implements OnInit {
       const lastTrick = this.tableService.undoTrick();
       lastTrick.playedCards.forEach((c) => (c.isPlayed = false));
       this.whichHandsTurn.set(lastTrick.playedCards[0].hand);
+      this.playedCards.set([]);
     }
     this.tableService.refreshDeck();
+  }
+
+  // Zakonczona lewa zostaje w playedCards jako czteroelementowa tablica az do
+  // zagrania piatej karty (addPlayedCard), wiec sama niepustosc nie odroznia
+  // lewy w toku od zakonczonej. Cofanie zakonczonej lewy nalezy do galezi
+  // operujacej na playedTricks, inaczej licznik lew zostaje nietkniety.
+  private isTrickInProgress(): boolean {
+    const count = this.playedCards().length;
+    return count > 0 && count < 4;
   }
 
   resetPlayedCards() {
@@ -223,6 +233,10 @@ export class Table implements OnInit {
 
   private endBiddingFase() {
     const highestBid = findHighestBid(this.biddingHistory());
+    if (!highestBid) {
+      // Rozdanie spasowane — nikt nie licytowal, wiec kontrakt nie powstaje.
+      return;
+    }
     const declarer = findDeclarer(this.biddingHistory(), highestBid);
     this.whichHandsTurn.set(declarer);
     const isDoubled = isContractDoubledOrRedubled(this.biddingHistory(), highestBid);

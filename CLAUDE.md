@@ -21,7 +21,8 @@ npm start                    # ng serve on http://localhost:4200
 npm run build                # production build into dist/
 npm test                     # Vitest via @angular/build:unit-test (watch mode)
 npx ng test --watch=false    # single run; exits 1 on failure, safe for CI
-npx ng test --watch=false --test-path-pattern=bidding   # single file
+npx ng test --watch=false --include=src/app/main-page/utils/bidding.util.spec.ts  # single file
+npx ng test --watch=false --filter=findDeclarer                                   # single test by name
 ```
 
 Do not pipe `ng test` through `tail`/`head` when you care about the exit code —
@@ -83,32 +84,37 @@ Nothing rejects an illegal bid that arrives by another path.
 
 ## Known bugs
 
-Do not "fix" these incidentally — they are tracked and scheduled. See
-`docs/superpowers/specs/2026-08-19-playwright-e2e-design.md` section 10.
+**All four behavioural bugs from spec section 10 were fixed on 2026-08-20.** The
+tests that documented them are live — no `fixme`, no `skip` anywhere in the
+suite. The fixes, so they are not "cleaned up" back into bugs:
 
-1. **Passing out throws.** Four passes make `isBiddingFaseOver` return true,
-   `findHighestBid` returns `undefined`, and `findDeclarer` dereferences it —
-   `TypeError: Cannot read properties of undefined (reading 'bidder')`. Angular's
-   global error handler swallows it, so the app stays on screen and simply never
-   produces a contract. Any test for this must assert on console errors, not on
-   what is visible. `bidding.util.ts:136-146`, `table.ts:224-230`
-2. **Redoubled contracts report `isDoubled: false`.** `isDoubled ?? isRedubled ?? false`
-   — `??` does not catch `false`. Currently invisible in the UI because
-   `tricks-count.html` tests `isRedubled` before `isDoubled`, so XX still renders;
-   the flag is wrong for any future consumer. `bidding.util.ts:73`
-3. **`isContractDoubledOrRedubled` matches the contract on `biddingValue` +
-   `bidder` only, ignoring suit**, so a double placed before the real contract
-   can be miscounted. `bidding.util.ts:167`
-4. **The dummy view is dead code.** `hand.html` implements a full four-column
-   dummy layout, but `table.html` never passes the `isDummy` input.
-5. **Undoing a finished trick leaves the trick counter untouched.** A completed
-   trick stays in `playedCards` as a four-element array — the signal is only
-   cleared when a fifth card is played (`addPlayedCard`, `table.ts:216-222`).
-   So `onUndoTrick` mistakes a finished trick for a trick in progress: it
-   returns the four cards to the hands but never removes the entry from
-   `playedTricks`. A second click fixes the counter, having already returned the
-   cards. `onUndoCard` breaks the same way — three cards left on the table
-   against a counter of 1. `table.ts:169-181`, condition on `table.ts:170`
+1. **Passing out.** `findHighestBid` is typed `Bidding | undefined` — it really
+   can return nothing — and `endBiddingFase` returns early when it does. A
+   passed-out auction produces no contract and no exception; the app stays in
+   the bidding phase. Do not narrow that return type back.
+   `bidding.util.ts:136`, `table.ts:224-232`
+2. **Redoubled contracts.** `isDoubled: (isDoubled ?? false) || (isRedubled ?? false)`.
+   The old `??` chain did not catch `false`, because `false` is not nullish.
+   `bidding.util.ts:73`
+3. **`isContractDoubledOrRedubled` matches on suit too**, not just
+   `biddingValue` + `bidder`, so a double placed before the real contract is no
+   longer counted against it. `bidding.util.ts:167`
+4. **Undo of a finished trick.** A completed trick stays in `playedCards` as a
+   four-element array until a fifth card is played (`addPlayedCard`), so
+   emptiness alone cannot tell a finished trick from one in progress — that is
+   what `isTrickInProgress()` (`length > 0 && length < 4`) is for. Both
+   `onUndoCard` and `onUndoTrick` route the finished case to the `playedTricks`
+   branch. Note `playedCards` and `Trick.playedCards` are **the same array
+   reference** (`handleTrickCompletion` stores it as-is), so re-broadcasting
+   needs a fresh array — a `set()` with the same reference is a no-op under
+   signal equality. `table.ts:151-191`
+
+Still open, and deliberately not a behavioural bug:
+
+- **The dummy view is dead code.** `hand.html` implements a full four-column
+  dummy layout, but `table.html` never passes the `isDummy` input, so the branch
+  is unreachable from the UI. Untested, because the intended behaviour has never
+  been agreed. Decide what it should do before touching it.
 
 **Not a bug, despite appearances:** `endBiddingFase` sets the turn to the
 declarer, but `onBidding` calls `changePlayerTurn()` immediately afterwards, so

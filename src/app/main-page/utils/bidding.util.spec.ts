@@ -110,12 +110,13 @@ describe('findHighestBid', () => {
       createBidding('South', 'X', 'double'),
       pass('West'),
     ];
-    expect(findHighestBid(history).color).toBe('hearts');
+    expect(findHighestBid(history)?.color).toBe('hearts');
   });
 
-  it('returns undefined for a passed-out auction — root cause of the pass-out crash', () => {
-    // Bug 1: Table.endBiddingFase przekazuje to dalej do findDeclarer, ktory
-    // czyta .bidder z undefined. Patrz table.ts:224-230.
+  it('returns undefined for a passed-out auction', () => {
+    // Sygnatura mowi `Bidding | undefined` wlasnie dlatego: przy samych pasach
+    // nie ma najwyzszej odzywki, a endBiddingFase musi to obsluzyc zamiast
+    // przekazywac undefined do findDeclarer.
     const history = [pass('North'), pass('East'), pass('South'), pass('West')];
     expect(findHighestBid(history)).toBeUndefined();
   });
@@ -158,7 +159,7 @@ describe('isContractDoubledOrRedubled', () => {
     expect(isContractDoubledOrRedubled(history, history[0])).toBe('XX');
   });
 
-  it.skip('ignores a double that was applied to an earlier contract', () => {
+  it('ignores a double that was applied to an earlier contract', () => {
     // Bug 4: findIndex dopasowuje po biddingValue + bidder, z pominieciem koloru,
     // wiec trafia w 1 clubs zamiast w 1 spades i doklada kontre sprzed kontraktu.
     // Patrz bidding.util.ts:167.
@@ -188,7 +189,7 @@ describe('createContract', () => {
     expect(contract.isRedubled).toBe(false);
   });
 
-  it.skip('marks a redoubled contract as doubled as well', () => {
+  it('marks a redoubled contract as doubled as well', () => {
     // Bug 3: isDoubled ?? isRedubled ?? false — operator ?? nie lapie wartosci
     // false, bo false nie jest nullish, wiec kontrakt z rekontra raportuje
     // isDoubled: false. Patrz bidding.util.ts:73.

@@ -241,6 +241,17 @@ kilkudziesięciu asercji rozsianych po testach.
 
 ## 10. Obsługa znanych bugów
 
+> **Status na 2026-08-20: wszystkie cztery bugi zachowania naprawione.**
+> Znaczniki zdjęte, testy są częścią zwykłego zestawu (29 e2e, 33 jednostkowe,
+> zero pominiętych). Poniższy opis zostaje jako zapis przyczyn — czytaj go w
+> czasie przeszłym. Otwarta zostaje wyłącznie pozycja 4 (martwy widok dziadka),
+> bo to nie błąd zachowania, tylko funkcja nieuruchomiona bez uzgodnionego
+> zachowania docelowego. Naprawy opisuje `CLAUDE.md`, sekcja „Known bugs".
+>
+> Przy okazji naprawy doszedł jeden test, którego wcześniej nie było: „Cofnij
+> kartę" po zakończonej lewie (drugi objaw punktu 5). Zweryfikowany przez
+> cofnięcie poprawki i potwierdzenie, że pada.
+
 Testy opisują **poprawne reguły brydżowe**. Scenariusze, które na obecnym
 kodzie nie przechodzą, oznaczamy `test.fixme()` (e2e) lub `it.skip()`
 (jednostkowe) z komentarzem wskazującym plik i linię. Suite pozostaje zielony,

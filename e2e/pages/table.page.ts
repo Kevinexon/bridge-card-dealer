@@ -159,11 +159,18 @@ export class TablePage {
     await this.hand(seat).locator('[data-testid^="card-"]').first().dispatchEvent('click');
   }
 
-  /** Rozgrywa pelna lewe, za kazdym razem pierwsza karta gracza na turze. */
-  async playRoundOfHighestCards(): Promise<void> {
+  /**
+   * Rozgrywa pelna lewe, za kazdym razem pierwsza karta gracza na turze.
+   * Zwraca kolejnosc, w jakiej gracze zagrywali.
+   */
+  async playRoundOfHighestCards(): Promise<Seat[]> {
+    const order: Seat[] = [];
     for (let i = 0; i < 4; i++) {
-      await this.playFromSeat(await this.seatOnTurn());
+      const seat = await this.seatOnTurn();
+      order.push(seat);
+      await this.playFromSeat(seat);
     }
+    return order;
   }
 
   /** Doprowadza licytacje do kontraktu otwierajacego i trzech pasow. */
