@@ -12,20 +12,20 @@
 
 ## Postęp
 
-Stan na 2026-08-20, gałąź `feature/playwright-e2e`.
+Stan na 2026-08-20, gałąź `feature/playwright-e2e`. **Plan wykonany w całości.**
 
-| Task                                    | Status          | Commit    |
-| --------------------------------------- | --------------- | --------- |
-| 1. Prettier                             | ✅ zrobione     | `79b369a` |
-| 2. Testy `card.util` + usunięcie speców | ✅ zrobione     | `0cb84a7` |
-| 3. Testy `bidding.util`                 | ✅ zrobione     | `455e942` |
-| 4. Infrastruktura Playwright            | ✅ zrobione     | `a4457c6` |
-| 5. Page Object + testidy rąk            | ✅ zrobione     | `e3521ad` |
-| 6. Licytacja e2e                        | ✅ zrobione     | `b7787c0` |
-| 7. Rozgrywka e2e                        | ✅ zrobione     | (ten)     |
-| 8. Tryb trenera e2e                     | ✅ zrobione     | (ten)     |
-| 9. Skrypt `testids.mjs`                 | ✅ zrobione     | (ten)     |
-| 10. Weryfikacja końcowa                 | ⬜ **następne** |           |
+| Task                                    | Status      | Commit    |
+| --------------------------------------- | ----------- | --------- |
+| 1. Prettier                             | ✅ zrobione | `79b369a` |
+| 2. Testy `card.util` + usunięcie speców | ✅ zrobione | `0cb84a7` |
+| 3. Testy `bidding.util`                 | ✅ zrobione | `455e942` |
+| 4. Infrastruktura Playwright            | ✅ zrobione | `a4457c6` |
+| 5. Page Object + testidy rąk            | ✅ zrobione | `e3521ad` |
+| 6. Licytacja e2e                        | ✅ zrobione | `b7787c0` |
+| 7. Rozgrywka e2e                        | ✅ zrobione | (ten)     |
+| 8. Tryb trenera e2e                     | ✅ zrobione | (ten)     |
+| 9. Skrypt `testids.mjs`                 | ✅ zrobione | (ten)     |
+| 10. Weryfikacja końcowa                 | ✅ zrobione | (ten)     |
 
 Zweryfikowany stan po Tasku 6:
 
@@ -74,6 +74,15 @@ teraz przedrostkowe (`isCovered`), co ma udokumentowane w kodzie ograniczenie:
 wystarczy jeden pasujący literał, więc usunięcie `dealer-North` przy
 zachowanym `dealer-East` przejdzie kontrolę. Obie gałęzie dopasowania
 zweryfikowano przez usunięcie atrybutu i potwierdzenie kodu wyjścia 1.
+
+**Korekta po Tasku 10.** Weryfikacja „trzy przebiegi pod rząd" zrobiła to, po
+co była: trzeci przebieg wywrócił test alertu. Przyczyną nie jest aplikacja,
+tylko wyścig między Playwrightem a pierwszym cyklem detekcji zmian dialogu
+(spec sekcja 10a). `addAlert` czeka teraz na fokus przycisku „Ok" jako warunek
+gotowości. Po poprawce pięć przebiegów pod rząd dało identyczny wynik.
+
+Stan końcowy: **26 passed + 2 skipped** w e2e, **31 passed + 2 skipped**
+w testach jednostkowych, `format:check`, `testids:check` i `ng build` zielone.
 
 **Do rozstrzygnięcia w Tasku 8:** bug „martwy widok dziadka" opiera się
 wyłącznie na odczycie kodu, bez testu — czyli dokładnie tak samo jak obalona

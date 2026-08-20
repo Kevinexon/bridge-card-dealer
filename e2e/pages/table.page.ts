@@ -228,6 +228,13 @@ export class TablePage {
 
   async addAlert(seat: Seat, text: string): Promise<void> {
     await this.biddingColumn(seat).getByTestId('bidding-entry').last().click();
+    // Dialog trafia do DOM przed swoim pierwszym cyklem detekcji zmian —
+    // aplikacja jest zoneless, wiec CD jest planowane, a nie natychmiastowe.
+    // Wypelnienie pola w tym oknie przepada: NgModel jeszcze nie slucha, a
+    // ngOnInit i tak ustawia sygnal na pusty string. Fokus na cdkFocusInitial
+    // (przycisk Ok) ustawia Material dopiero po tym cyklu, wiec jest to warunek
+    // gotowosci dialogu — a nie arbitralna zwloka.
+    await expect(this.page.getByTestId('alert-confirm')).toBeFocused();
     await this.page.getByTestId('alert-input').fill(text);
     await this.page.getByTestId('alert-confirm').click();
   }

@@ -156,7 +156,8 @@ Nazwy są po angielsku i semantyczne — opisują rolę, nie wygląd.
 | Panel trenera      | `admin-panel`, `admin-toggle`, `deal-new`, `edit-mode-toggle`, `board-number`              |
 | Dealer i założenia | `dealer-North`, `vulnerable-NS`, `vulnerable-WE`                                           |
 | Cofanie            | `undo-bid`, `reset-bidding`, `undo-card`, `undo-trick`, `reset-play`                       |
-| Alerty             | `alert-dialog`, `alert-input`, `alert-panel`, `alert-item`                                 |
+| Alerty             | `alert-input`, `alert-confirm`, `alert-cancel`, `alert-panel`, `alert-item`                |
+| Numer rozdania     | `bidding-panel-board-number`                                                               |
 
 Karta jest w danym momencie albo w ręce, albo na stole — `isPlayed` filtruje ją
 z `sortedHandDeck`, więc `card-spades-A` nigdy nie występuje dwukrotnie.
@@ -303,6 +304,25 @@ wychodzi rozgrywający zamiast gracza po jego lewej, na podstawie odczytu
 `table.ts:227` w izolacji. Test e2e to obalił: `onBidding` wywołuje
 `changePlayerTurn()` bezpośrednio po `endBiddingFase()`, więc wyjście przypada
 poprawnie lewemu przeciwnikowi rozgrywającego. To nie jest bug.
+
+## 10a. Niestabilność wykryta przy weryfikacji końcowej
+
+Zestaw e2e padał mniej więcej raz na dziesięć przebiegów na teście alertu.
+Przyczyna nie leży w aplikacji: dialog Materiala trafia do DOM **przed**
+swoim pierwszym cyklem detekcji zmian, bo aplikacja jest zoneless i cykl
+jest planowany, a nie natychmiastowy. Playwright widzi pole tekstowe jako
+gotowe i wypełnia je w tym oknie; zdarzenie `input` przepada, bo `NgModel`
+jeszcze nie nasłuchuje, a `ngOnInit` dialogu i tak ustawia sygnał na pusty
+string. Dialog zamyka się wtedy z wynikiem `""`, alert nie powstaje.
+
+Dowód: log `effect` na sygnale `alertInfo` w nieudanych przebiegach
+pokazywał wyłącznie `""` — tekst nigdy do modelu nie dotarł.
+
+Rozwiązaniem nie jest `retries` ani `waitForTimeout`, tylko warunek
+gotowości: Material ustawia fokus na `cdkFocusInitial` (przycisk „Ok")
+dopiero po tym cyklu, więc `addAlert` czeka na ten fokus przed wypełnieniem
+pola. Zmierzone: bez warunku 3 porażki na 24 próby, z warunkiem 0 na 24,
+a pełny zestaw pięć razy pod rząd bez różnicy.
 
 ## 11. Warstwa oszczędzania kontekstu
 
