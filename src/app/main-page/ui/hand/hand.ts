@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Component, computed, input, output, signal } from '@angular/core';
-import { Card, CardColor, HandName } from '../../utils/card.util';
+import { Card, Suit, HandName } from '../../utils/card.util';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -33,20 +33,20 @@ export class Hand {
     handDeckToSort = handDeckToSort.filter((card) => !card.isPlayed);
     handDeckToSort.sort((a, b) => b.sortValue - a.sortValue);
     handDeckToSort.sort((a, b) => {
-      const colorOrder: CardColor[] = ['spades', 'hearts', 'diamonds', 'clubs'];
-      return colorOrder.indexOf(a.color) - colorOrder.indexOf(b.color);
+      const suitOrder: Suit[] = ['spades', 'hearts', 'diamonds', 'clubs'];
+      return suitOrder.indexOf(a.suit) - suitOrder.indexOf(b.suit);
     });
     return handDeckToSort;
   });
 
   sortedDummyHandDeck = computed(() => {
     const sortedCards = this.sortedHandDeck();
-    const colorOrder: CardColor[] = ['spades', 'hearts', 'diamonds', 'clubs'];
+    const suitOrder: Suit[] = ['spades', 'hearts', 'diamonds', 'clubs'];
     const handBySuit: Card[][] = [[], [], [], []];
 
     sortedCards.forEach((card) => {
-      const colorIndex = colorOrder.indexOf(card.color);
-      handBySuit[colorIndex].push(card);
+      const suitIndex = suitOrder.indexOf(card.suit);
+      handBySuit[suitIndex].push(card);
     });
 
     return handBySuit;

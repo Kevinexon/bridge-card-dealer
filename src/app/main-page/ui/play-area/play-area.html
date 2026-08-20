@@ -6,7 +6,7 @@
           <img
             data-testid="played-card-North"
             [src]="item.imgUrl"
-            [alt]="item.color + ' ' + item.name"
+            [alt]="item.suit + ' ' + item.name"
             [class]="`z-${$index}`"
             class="absolute h-48 border border-gray-500 rounded-md w-32 top-0 left-34"
           />
@@ -15,7 +15,7 @@
           <img
             data-testid="played-card-South"
             [src]="item.imgUrl"
-            [alt]="item.color + ' ' + item.name"
+            [alt]="item.suit + ' ' + item.name"
             [class]="`z-${$index}`"
             class="absolute h-48 border border-gray-500 rounded-md w-32 bottom-0 right-34"
           />
@@ -24,7 +24,7 @@
           <img
             data-testid="played-card-East"
             [src]="item.imgUrl"
-            [alt]="item.color + ' ' + item.name"
+            [alt]="item.suit + ' ' + item.name"
             [class]="`z-${$index}`"
             class="absolute h-48 border border-gray-500 rounded-md w-32 top-36 right-0"
           />
@@ -33,7 +33,7 @@
           <img
             data-testid="played-card-West"
             [src]="item.imgUrl"
-            [alt]="item.color + ' ' + item.name"
+            [alt]="item.suit + ' ' + item.name"
             [class]="`z-${$index}`"
             class="absolute h-48 border border-gray-500 rounded-md w-32 top-36 left-0"
           />

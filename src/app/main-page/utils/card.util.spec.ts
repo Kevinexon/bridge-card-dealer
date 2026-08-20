@@ -8,10 +8,10 @@ describe('createCard', () => {
   });
 
   it('maps suit to its symbol', () => {
-    expect(createCard('spades', 'A').suit).toBe('♠');
-    expect(createCard('hearts', 'A').suit).toBe('♥');
-    expect(createCard('diamonds', 'A').suit).toBe('♦');
-    expect(createCard('clubs', 'A').suit).toBe('♣');
+    expect(createCard('spades', 'A').symbol).toBe('♠');
+    expect(createCard('hearts', 'A').symbol).toBe('♥');
+    expect(createCard('diamonds', 'A').symbol).toBe('♦');
+    expect(createCard('clubs', 'A').symbol).toBe('♣');
   });
 
   it('builds the image path from suit and rank', () => {
@@ -33,13 +33,13 @@ describe('createDeck', () => {
   it('creates 13 cards of each suit', () => {
     const deck = createDeck();
     for (const suit of ['spades', 'hearts', 'diamonds', 'clubs'] as const) {
-      expect(deck.filter((card) => card.color === suit)).toHaveLength(13);
+      expect(deck.filter((card) => card.suit === suit)).toHaveLength(13);
     }
   });
 
   it('creates no duplicates', () => {
     const deck = createDeck();
-    const keys = new Set(deck.map((card) => `${card.color}_${card.name}`));
+    const keys = new Set(deck.map((card) => `${card.suit}_${card.name}`));
     expect(keys.size).toBe(52);
   });
 
@@ -49,7 +49,7 @@ describe('createDeck', () => {
     const deck = createDeck();
     const seats = ['North', 'East', 'South', 'West'] as const;
     const suitsPerSeat = seats.map(
-      (_, seatIndex) => new Set(deck.filter((_, i) => i % 4 === seatIndex).map((c) => c.color)),
+      (_, seatIndex) => new Set(deck.filter((_, i) => i % 4 === seatIndex).map((c) => c.suit)),
     );
     expect(suitsPerSeat.map((s) => [...s])).toEqual([
       ['spades'],

@@ -89,11 +89,11 @@ tests that documented them are live — no `fixme`, no `skip` anywhere in the
 suite. The fixes, so they are not "cleaned up" back into bugs:
 
 1. **Passing out.** `findHighestBid` is typed `Bidding | undefined` — it really
-   can return nothing — and `endBiddingFase` returns early when it does. A
+   can return nothing — and `endBiddingPhase` returns early when it does. A
    passed-out auction produces no contract and no exception; the app stays in
    the bidding phase. Do not narrow that return type back.
    `bidding.util.ts:136`, `table.ts:224-232`
-2. **Redoubled contracts.** `isDoubled: (isDoubled ?? false) || (isRedubled ?? false)`.
+2. **Redoubled contracts.** `isDoubled: (isDoubled ?? false) || (isRedoubled ?? false)`.
    The old `??` chain did not catch `false`, because `false` is not nullish.
    `bidding.util.ts:73`
 3. **`isContractDoubledOrRedubled` matches on suit too**, not just
@@ -116,7 +116,7 @@ Still open, and deliberately not a behavioural bug:
   is unreachable from the UI. Untested, because the intended behaviour has never
   been agreed. Decide what it should do before touching it.
 
-**Not a bug, despite appearances:** `endBiddingFase` sets the turn to the
+**Not a bug, despite appearances:** `endBiddingPhase` sets the turn to the
 declarer, but `onBidding` calls `changePlayerTurn()` immediately afterwards, so
 the opening lead correctly falls to the declarer's left-hand opponent. Reading
 `table.ts:227` in isolation suggests otherwise — it was reported as a bug once
@@ -129,12 +129,35 @@ and semantic so they survive refactoring of Tailwind classes and Polish UI text.
 Never rename one without updating `e2e/pages/table.page.ts`. The inventory lives
 in the spec, section 7.
 
-**Naming debt, deliberately unaddressed so far.** A rename pass is planned; until
-then expect these and do not half-fix them: `Card` has both `color` (the suit
-name, e.g. `'spades'`) and `suit` (the symbol, e.g. `'♠'`); `Fase` is used where
-`Phase` is meant; `isRedubled`, `isBackword` and `hendDeck` are typos carried
-through several files; vulnerability uses `'WE'` while methods say `Ew`; outputs
-are prefixed `on` against the Angular style guide.
+**The vocabulary, after the rename pass of 2026-08-20.** Two nouns used to
+collide: `color` held the suit name and `suit` held the glyph. They are now:
+
+| Concept                      | Name                                                     |
+| ---------------------------- | -------------------------------------------------------- |
+| The four suits               | `Suit` = `'spades' \| 'hearts' \| 'diamonds' \| 'clubs'` |
+| A card's suit                | `Card.suit`                                              |
+| A card's glyph               | `Card.symbol` (`'♠'`)                                    |
+| What a bid names             | `BiddingDenomination` = `Suit \| 'NT'` plus markers      |
+| A bid's denomination / glyph | `Bidding.denomination`, `Bidding.symbol` (`'♠'`, `'BA'`) |
+
+`BiddingDenomination` also carries `'pass' \| 'double' \| 'redouble'`. Those are
+not denominations — they are markers riding in the same field, which is why the
+type is not simply `Suit | 'NT'`. Untangling that is a data-model change, not a
+rename, and was left alone.
+
+`[class]` bindings render these values straight into CSS class names
+(`styles.css` styles `.spades`, `.hearts`, …), so the **values** are load-bearing
+even though the property names are not.
+
+**Outputs carry no `on` prefix** (`cardPlayed`, `bidPlaced`, `dealNewRequested`),
+per the Angular style guide. Handler methods that consume them keep it
+(`Table.onBidding`, `Table.onCardPlayed`) — that is the convention, not an
+oversight.
+
+**`'WE'` in `linesVulnerable` is not a typo for `'EW'`.** It is the Polish
+abbreviation for _Wschód-Zachód_ and is displayed to the user as a button label
+next to `NS`. The English `isEwVulnerable` beside it is correct too: UI text is
+Polish, identifiers are English. Leave both alone.
 
 ## Deployment
 

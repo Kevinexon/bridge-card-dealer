@@ -13,16 +13,16 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import {
   Bidding,
-  BiddingColor,
-  BiddingColorSeniorityMap,
-  BiddingColorSymbolMap,
+  BiddingDenomination,
+  BiddingDenominationSeniorityMap,
+  BiddingDenominationSymbolMap,
   BiddingValue,
   calculateMinLevel,
   createBidding,
   isLastBidderEnemy,
-  lastBiddedColorSeniority,
+  lastBiddedDenominationSeniority,
   lastNotPass,
-  specialBiddingValueColorMap,
+  specialBiddingValueDenominationMap,
 } from '../../utils/bidding.util';
 import { HandName } from '../../utils/card.util';
 
@@ -42,33 +42,34 @@ export class BiddingPanel {
   selectedLevel: WritableSignal<number | null> = signal(null);
 
   levels: Signal<number[]> = signal(Array.from({ length: 7 }, (_, i) => i + 1)).asReadonly();
-  colors: Signal<{ name: BiddingColor; suit: string; seniority: number }[]> = signal([
-    {
-      name: 'clubs',
-      suit: BiddingColorSymbolMap.get('clubs') ?? '♣',
-      seniority: BiddingColorSeniorityMap.get('clubs') ?? 0,
-    },
-    {
-      name: 'diamonds',
-      suit: BiddingColorSymbolMap.get('diamonds') ?? '♦',
-      seniority: BiddingColorSeniorityMap.get('diamonds') ?? 0,
-    },
-    {
-      name: 'hearts',
-      suit: BiddingColorSymbolMap.get('hearts') ?? '♥',
-      seniority: BiddingColorSeniorityMap.get('hearts') ?? 0,
-    },
-    {
-      name: 'spades',
-      suit: BiddingColorSymbolMap.get('spades') ?? '♠',
-      seniority: BiddingColorSeniorityMap.get('spades') ?? 0,
-    },
-    {
-      name: 'NT',
-      suit: BiddingColorSymbolMap.get('NT') ?? 'BA',
-      seniority: BiddingColorSeniorityMap.get('NT') ?? 0,
-    },
-  ]);
+  denominations: Signal<{ name: BiddingDenomination; symbol: string; seniority: number }[]> =
+    signal([
+      {
+        name: 'clubs',
+        symbol: BiddingDenominationSymbolMap.get('clubs') ?? '♣',
+        seniority: BiddingDenominationSeniorityMap.get('clubs') ?? 0,
+      },
+      {
+        name: 'diamonds',
+        symbol: BiddingDenominationSymbolMap.get('diamonds') ?? '♦',
+        seniority: BiddingDenominationSeniorityMap.get('diamonds') ?? 0,
+      },
+      {
+        name: 'hearts',
+        symbol: BiddingDenominationSymbolMap.get('hearts') ?? '♥',
+        seniority: BiddingDenominationSeniorityMap.get('hearts') ?? 0,
+      },
+      {
+        name: 'spades',
+        symbol: BiddingDenominationSymbolMap.get('spades') ?? '♠',
+        seniority: BiddingDenominationSeniorityMap.get('spades') ?? 0,
+      },
+      {
+        name: 'NT',
+        symbol: BiddingDenominationSymbolMap.get('NT') ?? 'BA',
+        seniority: BiddingDenominationSeniorityMap.get('NT') ?? 0,
+      },
+    ]);
 
   doubleDisabled = computed(() => {
     let lastBid = lastNotPass(this.biddingHistory());
@@ -90,23 +91,23 @@ export class BiddingPanel {
     return calculateMinLevel(this.biddingHistory());
   });
 
-  lastColorSeniority = computed(() => {
+  lastDenominationSeniority = computed(() => {
     let selectedLevel = this.selectedLevel() ?? 0;
     let minLevel = this.minLevel();
-    let lastColorSeniority = lastBiddedColorSeniority(this.biddingHistory());
+    let lastDenominationSeniority = lastBiddedDenominationSeniority(this.biddingHistory());
     if (selectedLevel === 0) {
       return 10;
     }
     if (selectedLevel > minLevel) {
       return -1;
     }
-    return lastColorSeniority === 5 ? -1 : lastColorSeniority;
+    return lastDenominationSeniority === 5 ? -1 : lastDenominationSeniority;
   });
 
   selectNotValue(isDisabled: boolean, value: BiddingValue) {
     if (!isDisabled) {
       this.bidPlaced.emit(
-        createBidding(this.handTurn(), value, specialBiddingValueColorMap.get(value)),
+        createBidding(this.handTurn(), value, specialBiddingValueDenominationMap.get(value)),
       );
     }
     this.selectedLevel.set(null);
@@ -118,10 +119,10 @@ export class BiddingPanel {
     }
   }
 
-  selectColor(isDisabled: boolean, color: BiddingColor) {
+  selectDenomination(isDisabled: boolean, denomination: BiddingDenomination) {
     if (!isDisabled && this.selectedLevel() !== null) {
       this.bidPlaced.emit(
-        createBidding(this.handTurn(), this.selectedLevel() as BiddingValue, color),
+        createBidding(this.handTurn(), this.selectedLevel() as BiddingValue, denomination),
       );
 
       this.selectedLevel.set(null);

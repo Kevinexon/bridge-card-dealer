@@ -62,17 +62,22 @@
   <mat-divider />
 
   <div class="flex pt-2">
-    @for (color of colors(); track color.name) {
+    @for (denomination of denominations(); track denomination.name) {
       <div
         class="bidding-button"
-        [attr.data-testid]="'bid-suit-' + color.name"
-        [class]="color.name === 'NT' ? `${color.name}` : `${color.name}`"
-        [class.bidding-button-disabled]="lastColorSeniority() >= color.seniority"
+        [attr.data-testid]="'bid-suit-' + denomination.name"
+        [class]="denomination.name === 'NT' ? `${denomination.name}` : `${denomination.name}`"
+        [class.bidding-button-disabled]="lastDenominationSeniority() >= denomination.seniority"
         matRipple
-        [matRippleDisabled]="lastColorSeniority() >= color.seniority"
-        (click)="selectColor(lastColorSeniority() >= color.seniority, color.name)"
+        [matRippleDisabled]="lastDenominationSeniority() >= denomination.seniority"
+        (click)="
+          selectDenomination(
+            lastDenominationSeniority() >= denomination.seniority,
+            denomination.name
+          )
+        "
       >
-        <span class="font-bold text-2xl">{{ color.suit }}</span>
+        <span class="font-bold text-2xl">{{ denomination.symbol }}</span>
       </div>
     }
   </div>

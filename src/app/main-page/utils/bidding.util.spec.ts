@@ -8,7 +8,7 @@ import {
   isBiddingPhaseOver,
   isContractDoubledOrRedoubled,
   isLastBidderEnemy,
-  lastBiddedColorSeniority,
+  lastBiddedDenominationSeniority,
   lastNotPass,
 } from './bidding.util';
 
@@ -25,7 +25,7 @@ describe('lastNotPass', () => {
 
   it('returns the most recent non-pass call', () => {
     const history = [createBidding('North', 1, 'clubs'), pass('East')];
-    expect(lastNotPass(history)?.color).toBe('clubs');
+    expect(lastNotPass(history)?.denomination).toBe('clubs');
   });
 });
 
@@ -66,17 +66,17 @@ describe('calculateMinLevel', () => {
   });
 });
 
-describe('lastBiddedColorSeniority', () => {
+describe('lastBiddedDenominationSeniority', () => {
   it('returns 0 when nothing was bid', () => {
-    expect(lastBiddedColorSeniority([])).toBe(0);
+    expect(lastBiddedDenominationSeniority([])).toBe(0);
   });
 
   it('ranks clubs below diamonds below hearts below spades below notrump', () => {
-    expect(lastBiddedColorSeniority([createBidding('North', 1, 'clubs')])).toBe(1);
-    expect(lastBiddedColorSeniority([createBidding('North', 1, 'diamonds')])).toBe(2);
-    expect(lastBiddedColorSeniority([createBidding('North', 1, 'hearts')])).toBe(3);
-    expect(lastBiddedColorSeniority([createBidding('North', 1, 'spades')])).toBe(4);
-    expect(lastBiddedColorSeniority([createBidding('North', 1, 'NT')])).toBe(5);
+    expect(lastBiddedDenominationSeniority([createBidding('North', 1, 'clubs')])).toBe(1);
+    expect(lastBiddedDenominationSeniority([createBidding('North', 1, 'diamonds')])).toBe(2);
+    expect(lastBiddedDenominationSeniority([createBidding('North', 1, 'hearts')])).toBe(3);
+    expect(lastBiddedDenominationSeniority([createBidding('North', 1, 'spades')])).toBe(4);
+    expect(lastBiddedDenominationSeniority([createBidding('North', 1, 'NT')])).toBe(5);
   });
 });
 
@@ -110,7 +110,7 @@ describe('findHighestBid', () => {
       createBidding('South', 'X', 'double'),
       pass('West'),
     ];
-    expect(findHighestBid(history)?.color).toBe('hearts');
+    expect(findHighestBid(history)?.denomination).toBe('hearts');
   });
 
   it('returns undefined for a passed-out auction', () => {

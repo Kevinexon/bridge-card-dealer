@@ -16,8 +16,8 @@
         <div class="relative flex-1 overflow-visible h-48 max-w-32">
           <img
             [src]="hideCards() ? reverseUrl() : item.imgUrl"
-            [alt]="item.color + ' ' + item.name"
-            [attr.data-testid]="'card-' + item.color + '-' + item.name"
+            [alt]="item.suit + ' ' + item.name"
+            [attr.data-testid]="'card-' + item.suit + '-' + item.name"
             class="absolute h-full border border-gray-500 cursor-pointer rounded-md w-32 max-w-32 hover:bottom-1"
             (click)="playCard(item)"
             [cdkDragDisabled]="!canMoveCards()"
@@ -62,12 +62,12 @@
 
 @if (isDummy()) {
   <div class="w-full flex">
-    @for (color of sortedDummyHandDeck(); track $index) {
+    @for (suitGroup of sortedDummyHandDeck(); track $index) {
       <div class="w-1/4 px-2 relative">
         @for (item of sortedDummyHandDeck()[$index]; track $index) {
           <img
             [src]="item.imgUrl"
-            [alt]="item.color + ' ' + item.name"
+            [alt]="item.suit + ' ' + item.name"
             class="absolute w-32 border border-gray-500 cursor-pointer rounded-md h-48 max-h-48 hover:left-1"
             [style]="'top: ' + $index * 35 + 'px;'"
             (click)="playCard(item)"

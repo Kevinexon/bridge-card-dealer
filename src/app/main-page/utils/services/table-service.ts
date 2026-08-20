@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { Card, CardColor, createDeck, HandName } from '../card.util';
+import { Card, Suit, createDeck, HandName } from '../card.util';
 import { Trick } from '../trick.util';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class TableService {
     this.deck.set([...this.deck()]);
   }
 
-  handleTrickCompletion(playedCards: Card[], trumpSuit?: CardColor) {
+  handleTrickCompletion(playedCards: Card[], trumpSuit?: Suit) {
     this.playedTricks.set([
       ...this.playedTricks(),
       { playedCards, winner: this.determineTrickWinner(playedCards, trumpSuit) },
@@ -61,17 +61,17 @@ export class TableService {
     this.deck.set([...this.deck()]);
   }
 
-  private determineTrickWinner(playedCards: Card[], trumpSuit?: CardColor): HandName {
+  private determineTrickWinner(playedCards: Card[], trumpSuit?: Suit): HandName {
     if (trumpSuit) {
-      const trumpCards = playedCards.filter((card) => card.color === trumpSuit);
+      const trumpCards = playedCards.filter((card) => card.suit === trumpSuit);
       if (trumpCards.length > 0) {
         trumpCards.sort((a, b) => b.sortValue - a.sortValue);
         return trumpCards[0].hand;
       }
     }
-    let trickColor = playedCards[0].color;
-    const sameColorCards = playedCards.filter((card) => card.color === trickColor);
-    sameColorCards.sort((a, b) => b.sortValue - a.sortValue);
-    return sameColorCards[0].hand;
+    let trickSuit = playedCards[0].suit;
+    const sameSuitCards = playedCards.filter((card) => card.suit === trickSuit);
+    sameSuitCards.sort((a, b) => b.sortValue - a.sortValue);
+    return sameSuitCards[0].hand;
   }
 }

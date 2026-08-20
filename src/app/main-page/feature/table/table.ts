@@ -18,7 +18,7 @@ import { PlayArea } from '../../ui/play-area/play-area';
 import { TricksCount } from '../../ui/tricks-count/tricks-count';
 import {
   Bidding,
-  BiddingColorToCardColorMap,
+  BiddingDenominationToSuitMap,
   Contract,
   createContract,
   findDeclarer,
@@ -137,10 +137,12 @@ export class Table implements OnInit {
     this.tableService.playCard(card);
     this.addPlayedCard(card);
     if (this.playedCards().length === 4) {
-      const biddingColor = this.contract()?.color;
+      const biddingDenomination = this.contract()?.denomination;
       this.tableService.handleTrickCompletion(
         this.playedCards(),
-        biddingColor != null ? BiddingColorToCardColorMap.get(biddingColor) : undefined,
+        biddingDenomination != null
+          ? BiddingDenominationToSuitMap.get(biddingDenomination)
+          : undefined,
       );
       this.whichHandsTurn.set(this.tableService.playedTricks().slice(-1)[0].winner!);
     } else {

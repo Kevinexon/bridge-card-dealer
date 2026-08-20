@@ -1,15 +1,15 @@
 import { find } from 'rxjs';
-import { CardColor, HandName } from './card.util';
+import { Suit, HandName } from './card.util';
 
-export type BiddingColor = CardColor | 'NT' | 'pass' | 'double' | 'redouble';
+export type BiddingDenomination = Suit | 'NT' | 'pass' | 'double' | 'redouble';
 
 export type BiddingValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 'PASS' | 'X' | 'XX';
 
 export interface Bidding {
   bidder: HandName;
   biddingValue: BiddingValue;
-  color?: BiddingColor;
-  suit?: '♠' | '♥' | '♦' | '♣' | 'BA';
+  denomination?: BiddingDenomination;
+  symbol?: '♠' | '♥' | '♦' | '♣' | 'BA';
   alertInfo?: string;
 }
 
@@ -19,14 +19,14 @@ export interface Contract extends Bidding {
   declarer: HandName;
 }
 
-export const BiddingColorToCardColorMap: Map<BiddingColor, CardColor> = new Map([
+export const BiddingDenominationToSuitMap: Map<BiddingDenomination, Suit> = new Map([
   ['clubs', 'clubs'],
   ['spades', 'spades'],
   ['diamonds', 'diamonds'],
   ['hearts', 'hearts'],
 ]);
 
-export const BiddingColorSeniorityMap: Map<BiddingColor, number> = new Map([
+export const BiddingDenominationSeniorityMap: Map<BiddingDenomination, number> = new Map([
   ['clubs', 1],
   ['diamonds', 2],
   ['hearts', 3],
@@ -34,15 +34,16 @@ export const BiddingColorSeniorityMap: Map<BiddingColor, number> = new Map([
   ['NT', 5],
 ]);
 
-export const BiddingColorSymbolMap: Map<BiddingColor, '♠' | '♥' | '♦' | '♣' | 'BA'> = new Map([
-  ['spades', '♠'],
-  ['hearts', '♥'],
-  ['diamonds', '♦'],
-  ['clubs', '♣'],
-  ['NT', 'BA'],
-]);
+export const BiddingDenominationSymbolMap: Map<BiddingDenomination, '♠' | '♥' | '♦' | '♣' | 'BA'> =
+  new Map([
+    ['spades', '♠'],
+    ['hearts', '♥'],
+    ['diamonds', '♦'],
+    ['clubs', '♣'],
+    ['NT', 'BA'],
+  ]);
 
-export const specialBiddingValueColorMap: Map<BiddingValue, BiddingColor> = new Map([
+export const specialBiddingValueDenominationMap: Map<BiddingValue, BiddingDenomination> = new Map([
   ['PASS', 'pass'],
   ['X', 'double'],
   ['XX', 'redouble'],
@@ -51,13 +52,13 @@ export const specialBiddingValueColorMap: Map<BiddingValue, BiddingColor> = new 
 export function createBidding(
   bidder: HandName,
   biddingValue: BiddingValue,
-  color?: BiddingColor,
+  denomination?: BiddingDenomination,
 ): Bidding {
   return {
     bidder,
     biddingValue,
-    color,
-    suit: color ? BiddingColorSymbolMap.get(color) : undefined,
+    denomination,
+    symbol: denomination ? BiddingDenominationSymbolMap.get(denomination) : undefined,
   };
 }
 
@@ -99,21 +100,21 @@ export function calculateMinLevel(biddingHistory: Bidding[]): number {
   let result = 1;
   if (lastBiddedValue) {
     result = lastBiddedValue.biddingValue as number;
-    if (lastBiddedValue.color === 'NT') {
+    if (lastBiddedValue.denomination === 'NT') {
       result++;
     }
   }
   return result;
 }
 
-export function lastBiddedColorSeniority(biddingHistory: Bidding[]): number {
+export function lastBiddedDenominationSeniority(biddingHistory: Bidding[]): number {
   const lastBiddedValue = biddingHistory
     .filter(
       (bid) => bid.biddingValue !== 'PASS' && bid.biddingValue !== 'X' && bid.biddingValue !== 'XX',
     )
     .slice(-1)[0];
   return lastBiddedValue
-    ? (BiddingColorSeniorityMap.get(lastBiddedValue.color ?? 'spades') ?? 0)
+    ? (BiddingDenominationSeniorityMap.get(lastBiddedValue.denomination ?? 'spades') ?? 0)
     : 0;
 }
 
@@ -157,7 +158,10 @@ export function findDeclarer(biddingHistory: Bidding[], highestBid: Bidding): Ha
       );
       break;
   }
-  return laneBidHistory.find((bid) => bid.color === highestBid.color)?.bidder ?? highestBid.bidder;
+  return (
+    laneBidHistory.find((bid) => bid.denomination === highestBid.denomination)?.bidder ??
+    highestBid.bidder
+  );
 }
 
 export function isContractDoubledOrRedoubled(
@@ -168,7 +172,7 @@ export function isContractDoubledOrRedoubled(
     (bid) =>
       bid.biddingValue === highestBid.biddingValue &&
       bid.bidder === highestBid.bidder &&
-      bid.color === highestBid.color,
+      bid.denomination === highestBid.denomination,
   );
   const biddingAfterContract = biddingHistory.slice(contractIndex);
   return biddingAfterContract.find((b) => b.biddingValue === 'XX') != null

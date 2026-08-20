@@ -4,9 +4,12 @@
 
     <div class="w-2/3 text-xl flex items-end justify-center" data-testid="contract-display">
       {{ contract()?.biddingValue }}
-      <span class="pr-2" [class]="contract()?.color" [class.text-2xl]="contract()?.suit !== 'BA'">{{
-        contract()?.suit
-      }}</span>
+      <span
+        class="pr-2"
+        [class]="contract()?.denomination"
+        [class.text-2xl]="contract()?.symbol !== 'BA'"
+        >{{ contract()?.symbol }}</span
+      >
       <span [class]="contract()?.isRedoubled ? 'redouble' : 'double'">
         @if (contract()?.isRedoubled) {
           XX

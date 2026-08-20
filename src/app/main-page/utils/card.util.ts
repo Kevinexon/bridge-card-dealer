@@ -1,6 +1,6 @@
 export type HandName = 'North' | 'East' | 'South' | 'West';
 
-export type CardColor = 'spades' | 'hearts' | 'diamonds' | 'clubs';
+export type Suit = 'spades' | 'hearts' | 'diamonds' | 'clubs';
 
 export type CardName = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A';
 
@@ -20,7 +20,7 @@ export const CardValueMap: Map<CardName, number> = new Map([
   ['A', 14],
 ]);
 
-export const CardColorSymbolMap: Map<CardColor, '♠' | '♥' | '♦' | '♣'> = new Map([
+export const SuitSymbolMap: Map<Suit, '♠' | '♥' | '♦' | '♣'> = new Map([
   ['spades', '♠'],
   ['hearts', '♥'],
   ['diamonds', '♦'],
@@ -29,30 +29,30 @@ export const CardColorSymbolMap: Map<CardColor, '♠' | '♥' | '♦' | '♣'> =
 
 export interface Card {
   sortValue: number;
-  color: CardColor;
+  suit: Suit;
   name: CardName;
-  suit: '♠' | '♥' | '♦' | '♣';
+  symbol: '♠' | '♥' | '♦' | '♣';
   imgUrl: string;
   hand: HandName;
   isPlayed?: boolean;
 }
 
-export function createCard(color: CardColor, name: CardName): Card {
+export function createCard(suit: Suit, name: CardName): Card {
   return {
-    color,
+    suit,
     name,
     hand: 'North',
     sortValue: CardValueMap.get(name) ?? 2,
-    suit: CardColorSymbolMap.get(color) ?? '♠',
-    imgUrl: `cards/${color}_${name}.jpg`,
+    symbol: SuitSymbolMap.get(suit) ?? '♠',
+    imgUrl: `cards/${suit}_${name}.jpg`,
   };
 }
 
 export function createDeck(): Card[] {
   return [
     ...['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].flatMap((name) =>
-      ['spades', 'hearts', 'diamonds', 'clubs'].map((color) =>
-        createCard(color as CardColor, name as CardName),
+      ['spades', 'hearts', 'diamonds', 'clubs'].map((suit) =>
+        createCard(suit as Suit, name as CardName),
       ),
     ),
   ];
@@ -60,9 +60,9 @@ export function createDeck(): Card[] {
 
 // export function createDeck(): Card[] {
 //   return [
-//     ...['spades', 'hearts', 'diamonds', 'clubs'].flatMap((color) =>
+//     ...['spades', 'hearts', 'diamonds', 'clubs'].flatMap((suit) =>
 //       ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].map((name) =>
-//         createCard(color as CardColor, name as CardName),
+//         createCard(suit as Suit, name as CardName),
 //       ),
 //     ),
 //   ];
