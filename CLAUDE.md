@@ -79,7 +79,7 @@ e2e tests unusually stable; the only flake sources are Material ripples and CDK
 drag animations.
 
 **Bidding legality is enforced in the UI, not in a validator.** `BiddingPanel`
-disables illegal buttons via `calculateMinLevel` and `lastBiddedColorSeniority`.
+disables illegal buttons via `calculateMinLevel` and `lastBiddedDenominationSeniority`.
 Nothing rejects an illegal bid that arrives by another path.
 
 ## Known bugs
@@ -96,7 +96,7 @@ suite. The fixes, so they are not "cleaned up" back into bugs:
 2. **Redoubled contracts.** `isDoubled: (isDoubled ?? false) || (isRedoubled ?? false)`.
    The old `??` chain did not catch `false`, because `false` is not nullish.
    `bidding.util.ts:73`
-3. **`isContractDoubledOrRedubled` matches on suit too**, not just
+3. **`isContractDoubledOrRedubled` matches on `denomination` too**, not just
    `biddingValue` + `bidder`, so a double placed before the real contract is no
    longer counted against it. `bidding.util.ts:167`
 4. **Undo of a finished trick.** A completed trick stays in `playedCards` as a
