@@ -1,0 +1,72 @@
+####
+# Buduje aplikacje Angulara i publikuje ja na gałezi `gh-pages`, z ktorej
+# GitHub Pages serwuje strone (Settings -> Pages -> Source: Deploy from a
+# branch, gh-pages, /).
+#
+# Poprzednik tego pliku (`jekyll-gh-pages.yml`, nietkniety szablon z
+# marketplace'u) budowal Jekyllem repozytorium zrodlowe, wiec pod publicznym
+# adresem ladowal wyrenderowany README zamiast aplikacji — i robil to przy
+# kazdym pushu na main, nadpisujac recznie wgrany build.
+####
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Push na gh-pages idzie zwyklym gitem, wiec wystarczy zapis do repozytorium.
+# Publikacja przez actions/deploy-pages wymagalaby przestawienia zrodla Pages
+# na "GitHub Actions", a to uprawnienie administratora repozytorium.
+permissions:
+  contents: write
+
+# Rownolegle deploye nadpisywalyby sie nawzajem w nieprzewidywalnej kolejnosci.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Bramka: nie publikujemy buildu, ktory nie przechodzi testow.
+      # Testy e2e (Playwright) celowo zostaja poza CI — patrz spec, sekcja 4.
+      - run: npx ng test --watch=false
+
+      # Aplikacja stoi pod /bridge-card-dealer/, a nie w korzeniu domeny.
+      # Sciezka wzgledna, nie pelny URL, zeby ten sam build dzialal takze
+      # lokalnie i pod innym hostem.
+      - run: npx ng build --base-href=/bridge-card-dealer/
+
+      - name: Przygotuj katalog do publikacji
+        run: |
+          cd dist/BridgeCardDealer/browser
+          # Pages przy 404 zwraca 404.html; oddanie tam index.html sprawia, ze
+          # bezposrednie wejscie na /stolik trafia do routera Angulara zamiast
+          # na strone bledu.
+          cp index.html 404.html
+          # Bez tego Pages przepuscilby katalog przez Jekylla.
+          touch .nojekyll
+
+      - name: Opublikuj na gh-pages
+        run: |
+          cd dist/BridgeCardDealer/browser
+          git init -q -b gh-pages
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -q -m "deploy: ${GITHUB_SHA}"
+          git push -q --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
