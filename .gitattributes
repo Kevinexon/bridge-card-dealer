@@ -1,0 +1,18 @@
+# Repozytorium trzyma pliki tekstowe z koncami linii LF, tak samo w katalogu
+# roboczym. Bez tego `core.autocrlf=true` na Windowsie materializuje je jako
+# CRLF przy kazdym checkoucie, przez co Prettier (domyslne `endOfLine: lf`)
+# zglasza cale repo jako niesformatowane, a git pokazuje zmiany bez zmiany
+# tresci.
+* text=auto eol=lf
+
+# Binaria - bez zadnej konwersji.
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
