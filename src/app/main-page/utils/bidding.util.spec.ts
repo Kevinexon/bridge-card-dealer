@@ -5,8 +5,8 @@ import {
   createContract,
   findDeclarer,
   findHighestBid,
-  isBiddingFaseOver,
-  isContractDoubledOrRedubled,
+  isBiddingPhaseOver,
+  isContractDoubledOrRedoubled,
   isLastBidderEnemy,
   lastBiddedColorSeniority,
   lastNotPass,
@@ -80,10 +80,10 @@ describe('lastBiddedColorSeniority', () => {
   });
 });
 
-describe('isBiddingFaseOver', () => {
+describe('isBiddingPhaseOver', () => {
   it('does not end the auction before four calls', () => {
     const history = [createBidding('North', 1, 'spades'), pass('East'), pass('South')];
-    expect(isBiddingFaseOver(history, history[2])).toBe(false);
+    expect(isBiddingPhaseOver(history, history[2])).toBe(false);
   });
 
   it('ends the auction on three passes following a bid', () => {
@@ -93,12 +93,12 @@ describe('isBiddingFaseOver', () => {
       pass('South'),
       pass('West'),
     ];
-    expect(isBiddingFaseOver(history, history[3])).toBe(true);
+    expect(isBiddingPhaseOver(history, history[3])).toBe(true);
   });
 
   it('ends the auction when all four players pass', () => {
     const history = [pass('North'), pass('East'), pass('South'), pass('West')];
-    expect(isBiddingFaseOver(history, history[3])).toBe(true);
+    expect(isBiddingPhaseOver(history, history[3])).toBe(true);
   });
 });
 
@@ -115,7 +115,7 @@ describe('findHighestBid', () => {
 
   it('returns undefined for a passed-out auction', () => {
     // Sygnatura mowi `Bidding | undefined` wlasnie dlatego: przy samych pasach
-    // nie ma najwyzszej odzywki, a endBiddingFase musi to obsluzyc zamiast
+    // nie ma najwyzszej odzywki, a endBiddingPhase musi to obsluzyc zamiast
     // przekazywac undefined do findDeclarer.
     const history = [pass('North'), pass('East'), pass('South'), pass('West')];
     expect(findHighestBid(history)).toBeUndefined();
@@ -139,15 +139,15 @@ describe('findDeclarer', () => {
   });
 });
 
-describe('isContractDoubledOrRedubled', () => {
+describe('isContractDoubledOrRedoubled', () => {
   it('returns null for an undoubled contract', () => {
     const history = [createBidding('North', 1, 'spades'), pass('East')];
-    expect(isContractDoubledOrRedubled(history, history[0])).toBeNull();
+    expect(isContractDoubledOrRedoubled(history, history[0])).toBeNull();
   });
 
   it('detects a double', () => {
     const history = [createBidding('North', 1, 'spades'), createBidding('East', 'X', 'double')];
-    expect(isContractDoubledOrRedubled(history, history[0])).toBe('X');
+    expect(isContractDoubledOrRedoubled(history, history[0])).toBe('X');
   });
 
   it('detects a redouble', () => {
@@ -156,7 +156,7 @@ describe('isContractDoubledOrRedubled', () => {
       createBidding('East', 'X', 'double'),
       createBidding('South', 'XX', 'redouble'),
     ];
-    expect(isContractDoubledOrRedubled(history, history[0])).toBe('XX');
+    expect(isContractDoubledOrRedoubled(history, history[0])).toBe('XX');
   });
 
   it('ignores a double that was applied to an earlier contract', () => {
@@ -171,7 +171,7 @@ describe('isContractDoubledOrRedubled', () => {
       pass('South'),
       pass('West'),
     ];
-    expect(isContractDoubledOrRedubled(history, history[2])).toBeNull();
+    expect(isContractDoubledOrRedoubled(history, history[2])).toBeNull();
   });
 });
 
@@ -179,22 +179,22 @@ describe('createContract', () => {
   it('creates an undoubled contract', () => {
     const contract = createContract(createBidding('North', 4, 'spades'), 'North', false, false);
     expect(contract.isDoubled).toBe(false);
-    expect(contract.isRedubled).toBe(false);
+    expect(contract.isRedoubled).toBe(false);
     expect(contract.declarer).toBe('North');
   });
 
   it('creates a doubled contract', () => {
     const contract = createContract(createBidding('North', 4, 'spades'), 'North', true, false);
     expect(contract.isDoubled).toBe(true);
-    expect(contract.isRedubled).toBe(false);
+    expect(contract.isRedoubled).toBe(false);
   });
 
   it('marks a redoubled contract as doubled as well', () => {
-    // Bug 3: isDoubled ?? isRedubled ?? false — operator ?? nie lapie wartosci
+    // Bug 3: isDoubled ?? isRedoubled ?? false — operator ?? nie lapie wartosci
     // false, bo false nie jest nullish, wiec kontrakt z rekontra raportuje
     // isDoubled: false. Patrz bidding.util.ts:73.
     const contract = createContract(createBidding('North', 4, 'spades'), 'North', false, true);
-    expect(contract.isRedubled).toBe(true);
+    expect(contract.isRedoubled).toBe(true);
     expect(contract.isDoubled).toBe(true);
   });
 });

@@ -15,7 +15,7 @@ export interface Bidding {
 
 export interface Contract extends Bidding {
   isDoubled: boolean;
-  isRedubled: boolean;
+  isRedoubled: boolean;
   declarer: HandName;
 }
 
@@ -65,13 +65,13 @@ export function createContract(
   bid: Bidding,
   declarer: HandName,
   isDoubled?: boolean,
-  isRedubled?: boolean,
+  isRedoubled?: boolean,
 ): Contract {
   return {
     ...bid,
     declarer,
-    isDoubled: (isDoubled ?? false) || (isRedubled ?? false),
-    isRedubled: isRedubled ?? false,
+    isDoubled: (isDoubled ?? false) || (isRedoubled ?? false),
+    isRedoubled: isRedoubled ?? false,
   };
 }
 
@@ -117,7 +117,7 @@ export function lastBiddedColorSeniority(biddingHistory: Bidding[]): number {
     : 0;
 }
 
-export function isBiddingFaseOver(biddingHistory: Bidding[], lastBid: Bidding): boolean {
+export function isBiddingPhaseOver(biddingHistory: Bidding[], lastBid: Bidding): boolean {
   const biddingLength = biddingHistory.length;
   if (lastBid.biddingValue === 'PASS' && biddingLength >= 4) {
     if (biddingLength === 4 && biddingHistory[0].biddingValue === 'PASS') {
@@ -160,7 +160,7 @@ export function findDeclarer(biddingHistory: Bidding[], highestBid: Bidding): Ha
   return laneBidHistory.find((bid) => bid.color === highestBid.color)?.bidder ?? highestBid.bidder;
 }
 
-export function isContractDoubledOrRedubled(
+export function isContractDoubledOrRedoubled(
   biddingHistory: Bidding[],
   highestBid: Bidding,
 ): null | 'X' | 'XX' {

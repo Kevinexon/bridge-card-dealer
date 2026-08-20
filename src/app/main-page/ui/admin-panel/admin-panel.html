@@ -23,7 +23,7 @@
             </div>
 
             <div class="flex-1 flex justify-center">
-              <button matFab extended data-testid="deal-new" (click)="onDealNew.emit()">
+              <button matFab extended data-testid="deal-new" (click)="dealNewRequested.emit()">
                 <mat-icon>refresh</mat-icon>
                 Rozdaj ponownie
               </button>
@@ -50,7 +50,7 @@
 
           <div class="mt-2">
             <span class="pr-4">Dealer:</span>
-            <mat-button-toggle-group [(ngModel)]="dealer" (valueChange)="onReset.emit()">
+            <mat-button-toggle-group [(ngModel)]="dealer" (valueChange)="dealerChanged.emit()">
               <mat-button-toggle value="North" data-testid="dealer-North">North</mat-button-toggle>
               <mat-button-toggle value="East" data-testid="dealer-East">East</mat-button-toggle>
               <mat-button-toggle value="South" data-testid="dealer-South">South</mat-button-toggle>

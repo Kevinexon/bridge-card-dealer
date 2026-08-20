@@ -25,26 +25,26 @@ export class Hand {
   hideCards = signal<boolean>(false);
   reverseUrl = signal<string>('cards/reverse.png');
 
-  onCardPlayed = output<Card>();
-  onCardDropped = output<{ card: Card; targetHand: HandName }>();
+  cardPlayed = output<Card>();
+  cardDropped = output<{ card: Card; targetHand: HandName }>();
 
   sortedHandDeck = computed(() => {
-    let hendDeck = this.handDeck();
-    hendDeck = hendDeck.filter((card) => !card.isPlayed);
-    hendDeck.sort((a, b) => b.sortValue - a.sortValue);
-    hendDeck.sort((a, b) => {
+    let handDeckToSort = this.handDeck();
+    handDeckToSort = handDeckToSort.filter((card) => !card.isPlayed);
+    handDeckToSort.sort((a, b) => b.sortValue - a.sortValue);
+    handDeckToSort.sort((a, b) => {
       const colorOrder: CardColor[] = ['spades', 'hearts', 'diamonds', 'clubs'];
       return colorOrder.indexOf(a.color) - colorOrder.indexOf(b.color);
     });
-    return hendDeck;
+    return handDeckToSort;
   });
 
   sortedDummyHandDeck = computed(() => {
-    const hendDeck = this.sortedHandDeck();
+    const sortedCards = this.sortedHandDeck();
     const colorOrder: CardColor[] = ['spades', 'hearts', 'diamonds', 'clubs'];
     const handBySuit: Card[][] = [[], [], [], []];
 
-    hendDeck.forEach((card) => {
+    sortedCards.forEach((card) => {
       const colorIndex = colorOrder.indexOf(card.color);
       handBySuit[colorIndex].push(card);
     });
@@ -52,14 +52,14 @@ export class Hand {
     return handBySuit;
   });
 
-  cardPlayed(card: Card) {
+  playCard(card: Card) {
     if (this.canPlay() && this.handsTurn() && !this.canMoveCards()) {
-      this.onCardPlayed.emit(card);
+      this.cardPlayed.emit(card);
     }
   }
 
   drop(event: CdkDragDrop<Card[]>) {
-    this.onCardDropped.emit({
+    this.cardDropped.emit({
       targetHand: event.container.id as HandName,
       card: event.item.data,
     });

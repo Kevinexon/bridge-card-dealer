@@ -37,7 +37,7 @@ export class BiddingPanel {
   biddingHistory = input.required<Bidding[]>();
   handTurn = input.required<HandName>();
 
-  onBidding = output<Bidding>();
+  bidPlaced = output<Bidding>();
 
   selectedLevel: WritableSignal<number | null> = signal(null);
 
@@ -105,7 +105,7 @@ export class BiddingPanel {
 
   selectNotValue(isDisabled: boolean, value: BiddingValue) {
     if (!isDisabled) {
-      this.onBidding.emit(
+      this.bidPlaced.emit(
         createBidding(this.handTurn(), value, specialBiddingValueColorMap.get(value)),
       );
     }
@@ -120,7 +120,7 @@ export class BiddingPanel {
 
   selectColor(isDisabled: boolean, color: BiddingColor) {
     if (!isDisabled && this.selectedLevel() !== null) {
-      this.onBidding.emit(
+      this.bidPlaced.emit(
         createBidding(this.handTurn(), this.selectedLevel() as BiddingValue, color),
       );
 

@@ -23,8 +23,8 @@ import {
   createContract,
   findDeclarer,
   findHighestBid,
-  isBiddingFaseOver,
-  isContractDoubledOrRedubled,
+  isBiddingPhaseOver,
+  isContractDoubledOrRedoubled,
 } from '../../utils/bidding.util';
 import { Card, HandName } from '../../utils/card.util';
 import { TableService } from '../../utils/services/table-service';
@@ -79,7 +79,7 @@ export class Table implements OnInit {
 
   playedTricks = computed(() => this.tableService.playedTricks());
 
-  biddingFase = computed(() => this.contract() == null);
+  biddingPhase = computed(() => this.contract() == null);
 
   alertedBiddings = computed(() => {
     return this.biddingHistory().filter((b) => b.alertInfo);
@@ -105,8 +105,8 @@ export class Table implements OnInit {
 
   onBidding(event: Bidding) {
     this.biddingHistory.set([...this.biddingHistory(), event]);
-    if (isBiddingFaseOver(this.biddingHistory(), event)) {
-      this.endBiddingFase();
+    if (isBiddingPhaseOver(this.biddingHistory(), event)) {
+      this.endBiddingPhase();
     }
     this.changePlayerTurn();
   }
@@ -124,13 +124,13 @@ export class Table implements OnInit {
       let lastBidder = this.biddingHistory().slice(-1)[0].bidder;
       this.biddingHistory().splice(this.biddingHistory().length - 1);
       this.biddingHistory.set([...this.biddingHistory()]);
-      this.goBackToBiddingFase(lastBidder);
+      this.goBackToBiddingPhase(lastBidder);
     }
   }
 
   resetBidding() {
     this.biddingHistory.set([]);
-    this.goBackToBiddingFase(this.dealer());
+    this.goBackToBiddingPhase(this.dealer());
   }
 
   onCardPlayed(card: Card) {
@@ -204,18 +204,18 @@ export class Table implements OnInit {
     this.tableService.refreshPlayedCards();
   }
 
-  private goBackToBiddingFase(biddingPlayer: HandName) {
+  private goBackToBiddingPhase(biddingPlayer: HandName) {
     this.playedCards.set([]);
     this.contract.set(null);
     this.whichHandsTurn.set(biddingPlayer);
     this.refreshPlayedCards();
   }
 
-  private changePlayerTurn(isBackword?: boolean) {
+  private changePlayerTurn(isBackward?: boolean) {
     const handOrder: HandName[] = ['North', 'East', 'South', 'West'];
     const currentIndex = handOrder.indexOf(this.whichHandsTurn());
     let nextIndex = 0;
-    if (isBackword) {
+    if (isBackward) {
       nextIndex = currentIndex > 0 ? currentIndex - 1 : 3;
     } else {
       nextIndex = (currentIndex + 1) % handOrder.length;
@@ -231,7 +231,7 @@ export class Table implements OnInit {
     this.playedCards.set([...playedCards, card]);
   }
 
-  private endBiddingFase() {
+  private endBiddingPhase() {
     const highestBid = findHighestBid(this.biddingHistory());
     if (!highestBid) {
       // Rozdanie spasowane — nikt nie licytowal, wiec kontrakt nie powstaje.
@@ -239,7 +239,7 @@ export class Table implements OnInit {
     }
     const declarer = findDeclarer(this.biddingHistory(), highestBid);
     this.whichHandsTurn.set(declarer);
-    const isDoubled = isContractDoubledOrRedubled(this.biddingHistory(), highestBid);
+    const isDoubled = isContractDoubledOrRedoubled(this.biddingHistory(), highestBid);
     this.contract.set(createContract(highestBid, declarer, isDoubled === 'X', isDoubled === 'XX'));
   }
 }

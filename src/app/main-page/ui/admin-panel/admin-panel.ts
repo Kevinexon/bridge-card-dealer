@@ -36,8 +36,8 @@ export class AdminPanel {
   undoCard = output();
   undoTrick = output();
   resetPlayedCards = output();
-  onReset = output();
-  onDealNew = output();
+  dealerChanged = output();
+  dealNewRequested = output();
 
   isPanelHidden = signal<boolean>(false);
 
