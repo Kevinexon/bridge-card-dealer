@@ -24,8 +24,8 @@ Stan na 2026-08-20, gałąź `feature/playwright-e2e`.
 | 6. Licytacja e2e                        | ✅ zrobione     | `b7787c0` |
 | 7. Rozgrywka e2e                        | ✅ zrobione     | (ten)     |
 | 8. Tryb trenera e2e                     | ✅ zrobione     | (ten)     |
-| 9. Skrypt `testids.mjs`                 | ⬜ **następne** |           |
-| 10. Weryfikacja końcowa                 | ⬜              |           |
+| 9. Skrypt `testids.mjs`                 | ✅ zrobione     | (ten)     |
+| 10. Weryfikacja końcowa                 | ⬜ **następne** |           |
 
 Zweryfikowany stan po Tasku 6:
 
@@ -64,6 +64,16 @@ Nowa baza dla Tasków 8-10: **18 passed + 2 skipped**, nie 19 + 3.
 **Po Tasku 8:** 26 passed + 2 skipped. Rozstrzygnięto też zaległą wątpliwość
 o martwy widok dziadka — wpis w specu zostaje, bo `isDummy` nie jest
 bindowany w żadnym `<app-hand>`, więc gałąź jest nieosiągalna z UI.
+
+**Korekta po Tasku 9.** Skrypt w wersji z planu dawał cztery fałszywe alarmy:
+zakładał, że sparametryzowany testid użyty w teście (`dealer-${seat}`) jest
+w szablonie budowany przez `[attr.data-testid]`. Tak powstają tylko `hand-`
+i `card-`; `dealer-North`, `played-card-North`, `bidding-column-North`
+i `vulnerable-NS` są wypisane literalnie. Porównanie dla takich testidów jest
+teraz przedrostkowe (`isCovered`), co ma udokumentowane w kodzie ograniczenie:
+wystarczy jeden pasujący literał, więc usunięcie `dealer-North` przy
+zachowanym `dealer-East` przejdzie kontrolę. Obie gałęzie dopasowania
+zweryfikowano przez usunięcie atrybutu i potwierdzenie kodu wyjścia 1.
 
 **Do rozstrzygnięcia w Tasku 8:** bug „martwy widok dziadka" opiera się
 wyłącznie na odczycie kodu, bez testu — czyli dokładnie tak samo jak obalona
