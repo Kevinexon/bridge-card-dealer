@@ -67,3 +67,28 @@ export function createDeck(): Card[] {
 //     ),
 //   ];
 // }
+
+// "Zeberka": kolory w rece maja sie przeplatac czarny-czerwony, zeby dwa
+// czerwone nigdy nie stykaly sie ze soba. Gdy jest atu, idzie on pierwszy,
+// a przeplot obowiazuje dalej. W obrebie jednej barwy starszy kolor idzie
+// przed mlodszym (pik przed treflem, kier przed karem).
+const blackSuits: Suit[] = ['spades', 'clubs'];
+const redSuits: Suit[] = ['hearts', 'diamonds'];
+
+function isBlackSuit(suit: Suit): boolean {
+  return blackSuits.includes(suit);
+}
+
+export function suitDisplayOrder(trump?: Suit | null): Suit[] {
+  const black = blackSuits.filter((suit) => suit !== trump);
+  const red = redSuits.filter((suit) => suit !== trump);
+  const order: Suit[] = trump ? [trump] : [];
+  // Bez atu zaczynamy od czarnego; z atu — od barwy przeciwnej do atu.
+  let takeBlack = trump ? !isBlackSuit(trump) : true;
+
+  while (black.length > 0 || red.length > 0) {
+    order.push((takeBlack ? black : red).shift()!);
+    takeBlack = !takeBlack;
+  }
+  return order;
+}

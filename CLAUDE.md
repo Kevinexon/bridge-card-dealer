@@ -73,6 +73,19 @@ hearts, South all diamonds, West all clubs. "Rozdaj ponownie" produces the same
 result every time. `card.util.ts` holds a commented-out alternative ordering that
 would produce mixed hands.
 
+A consequence worth knowing before writing tests: **hand ordering is invisible on
+the default deal**, because a hand holding one suit has nothing to interleave.
+`e2e/hand-order.spec.ts` therefore drags a few cards into North first.
+
+**Hands are laid out "zebra": black, red, black, red.** `suitDisplayOrder()` in
+`card.util.ts` is the single source of that order — `Hand` sorts by it, nothing
+else hardcodes a suit sequence. With no contract, or a contract in NT, the order
+is ♠ ♥ ♣ ♦. Once a suit contract exists, the trump moves to the front and the
+rest keep alternating (♦ trump → ♦ ♠ ♥ ♣), with the senior suit of each colour
+first. Students asked for this: the old order ♠ ♥ ♦ ♣ put the two red suits next
+to each other. `Table.trumpSuit` derives the trump from the contract and feeds
+every hand.
+
 **The app has no randomness at all** — no `Math.random`, `Date`, `crypto`,
 network or storage. State is a pure function of the click sequence. This makes
 e2e tests unusually stable; the only flake sources are Material ripples and CDK

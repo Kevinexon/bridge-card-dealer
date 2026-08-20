@@ -138,6 +138,30 @@ export class TablePage {
     return this.page.getByTestId(`played-card-${seat}`);
   }
 
+  /**
+   * Czeka, az reka ulozy sie w oczekiwanej kolejnosci kolorow.
+   *
+   * Musi ponawiac odczyt: aplikacja jest zoneless, wiec po przeciagnieciu karty
+   * DOM aktualizuje sie dopiero w kolejnym cyklu detekcji zmian. Jednorazowy
+   * odczyt `suitOrderInHand` lapie stan sprzed przeliczenia — to ta sama
+   * pulapka, ktora wywracala test alertu (spec, sekcja 10a).
+   */
+  async expectSuitOrder(seat: Seat, expected: Suit[]): Promise<void> {
+    await expect.poll(() => this.suitOrderInHand(seat)).toEqual(expected);
+  }
+
+  /**
+   * Kolory w rece w kolejnosci wyswietlania, kazdy raz. Czyta testidy kart
+   * (`card-<kolor>-<figura>`), wiec nie zalezy od klas ani od ukladu.
+   */
+  async suitOrderInHand(seat: Seat): Promise<Suit[]> {
+    const testIds = await this.hand(seat)
+      .locator('[data-testid^="card-"]')
+      .evaluateAll((cards) => cards.map((card) => card.getAttribute('data-testid') ?? ''));
+    const suits = testIds.map((testId) => testId.split('-')[1] as Suit);
+    return suits.filter((suit, index) => suits.indexOf(suit) === index);
+  }
+
   async playCard(suit: Suit, rank: Rank): Promise<void> {
     // Karty w rece sa pozycjonowane absolutnie i nachodza na siebie, wiec
     // klikniecie we wspolrzedne trafiloby w sasiada. dispatchEvent omija

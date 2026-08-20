@@ -26,7 +26,7 @@ import {
   isBiddingPhaseOver,
   isContractDoubledOrRedoubled,
 } from '../../utils/bidding.util';
-import { Card, HandName } from '../../utils/card.util';
+import { Card, HandName, Suit } from '../../utils/card.util';
 import { TableService } from '../../utils/services/table-service';
 import { AlertPanel } from '../../ui/alert-panel/alert-panel';
 
@@ -72,6 +72,15 @@ export class Table implements OnInit {
   westHand: Signal<Card[]> = computed(() => {
     let deck = this.tableService.deck();
     return this.tableService.getCardForHand('West');
+  });
+
+  /**
+   * Kolor atutowy dla ukladu rak ("zeberka" — patrz suitDisplayOrder).
+   * Null dopoki trwa licytacja i przy kontrakcie w BA, bo wtedy atu nie ma.
+   */
+  trumpSuit = computed<Suit | null>(() => {
+    const denomination = this.contract()?.denomination;
+    return denomination != null ? (BiddingDenominationToSuitMap.get(denomination) ?? null) : null;
   });
 
   isNsVulnerable = computed(() => this.linesVulnerable().some((l) => l === 'NS'));

@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Component, computed, input, output, signal } from '@angular/core';
-import { Card, Suit, HandName } from '../../utils/card.util';
+import { Card, Suit, HandName, suitDisplayOrder } from '../../utils/card.util';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -21,6 +21,8 @@ export class Hand {
   canPlay = input<boolean>(false);
   canMoveCards = input<boolean>(false);
   isDummy = input<boolean>(false);
+  /// Kolor atutowy z kontraktu; null w licytacji i przy kontrakcie w BA.
+  trumpSuit = input<Suit | null>(null);
 
   hideCards = signal<boolean>(false);
   reverseUrl = signal<string>('cards/reverse.png');
@@ -33,7 +35,7 @@ export class Hand {
     handDeckToSort = handDeckToSort.filter((card) => !card.isPlayed);
     handDeckToSort.sort((a, b) => b.sortValue - a.sortValue);
     handDeckToSort.sort((a, b) => {
-      const suitOrder: Suit[] = ['spades', 'hearts', 'diamonds', 'clubs'];
+      const suitOrder = suitDisplayOrder(this.trumpSuit());
       return suitOrder.indexOf(a.suit) - suitOrder.indexOf(b.suit);
     });
     return handDeckToSort;
@@ -41,7 +43,7 @@ export class Hand {
 
   sortedDummyHandDeck = computed(() => {
     const sortedCards = this.sortedHandDeck();
-    const suitOrder: Suit[] = ['spades', 'hearts', 'diamonds', 'clubs'];
+    const suitOrder = suitDisplayOrder(this.trumpSuit());
     const handBySuit: Card[][] = [[], [], [], []];
 
     sortedCards.forEach((card) => {

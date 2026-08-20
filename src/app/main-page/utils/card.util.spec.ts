@@ -1,4 +1,4 @@
-import { createCard, createDeck } from './card.util';
+import { createCard, createDeck, Suit, suitDisplayOrder } from './card.util';
 
 describe('createCard', () => {
   it('maps rank to sort value', () => {
@@ -57,5 +57,40 @@ describe('createDeck', () => {
       ['diamonds'],
       ['clubs'],
     ]);
+  });
+});
+
+describe('suitDisplayOrder', () => {
+  // "Zeberka": kolory maja sie przeplatac czarny-czerwony, zeby dwa czerwone
+  // nigdy nie stykaly sie w rece. Prosba uczniow, nie kaprys stylistyczny.
+  const isBlack = (suit: Suit) => suit === 'spades' || suit === 'clubs';
+
+  it('alternates black and red suits when there is no trump', () => {
+    expect(suitDisplayOrder()).toEqual(['spades', 'hearts', 'clubs', 'diamonds']);
+  });
+
+  it('puts the trump first and keeps alternating', () => {
+    expect(suitDisplayOrder('diamonds')).toEqual(['diamonds', 'spades', 'hearts', 'clubs']);
+    expect(suitDisplayOrder('hearts')).toEqual(['hearts', 'spades', 'diamonds', 'clubs']);
+    expect(suitDisplayOrder('clubs')).toEqual(['clubs', 'hearts', 'spades', 'diamonds']);
+    expect(suitDisplayOrder('spades')).toEqual(['spades', 'hearts', 'clubs', 'diamonds']);
+  });
+
+  it('never places two suits of the same colour next to each other', () => {
+    const trumps: (Suit | undefined)[] = [undefined, 'spades', 'hearts', 'diamonds', 'clubs'];
+    for (const trump of trumps) {
+      const order = suitDisplayOrder(trump);
+      for (let i = 1; i < order.length; i++) {
+        expect(isBlack(order[i]), `${trump ?? 'brak atu'}: ${order.join(' ')}`).not.toBe(
+          isBlack(order[i - 1]),
+        );
+      }
+    }
+  });
+
+  it('returns all four suits exactly once for every trump', () => {
+    for (const trump of ['spades', 'hearts', 'diamonds', 'clubs'] as Suit[]) {
+      expect(new Set(suitDisplayOrder(trump)).size).toBe(4);
+    }
   });
 });
