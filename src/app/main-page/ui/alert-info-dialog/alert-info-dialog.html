@@ -4,10 +4,17 @@
 <mat-dialog-content>
   <mat-form-field class="w-md">
     <mat-label>Wyjaśnienie</mat-label>
-    <textarea matInput [(ngModel)]="alertInfo"></textarea>
+    <textarea matInput data-testid="alert-input" [(ngModel)]="alertInfo"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton (click)="onNoClick()">Anuluj</button>
-  <button matButton="filled" [mat-dialog-close]="alertInfo()" cdkFocusInitial>Ok</button>
+  <button matButton data-testid="alert-cancel" (click)="onNoClick()">Anuluj</button>
+  <button
+    matButton="filled"
+    data-testid="alert-confirm"
+    [mat-dialog-close]="alertInfo()"
+    cdkFocusInitial
+  >
+    Ok
+  </button>
 </mat-dialog-actions>

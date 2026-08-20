@@ -275,6 +275,14 @@ pozycji; dwie z nich weryfikacja obaliła lub zawęziła (patrz na końcu sekcji
    rozłożonej w cztery kolumny, ale `table.html` nigdy nie przekazuje inputu
    `isDummy`. Bez testu — to nie błąd zachowania, tylko funkcja nieuruchomiona,
    a docelowe zachowanie nie zostało uzgodnione.
+
+   Zweryfikowane w Tasku 8: `isDummy` ma domyślne `false` (`hand.ts:23`) i nie
+   jest bindowane w żadnym z czterech `<app-hand>` w `table.html`, a `Hand` nie
+   jest używany nigdzie indziej. Gałąź `hand.html:63` jest więc nieosiągalna
+   z UI. Inaczej niż przy obalonej usterce o wyjściu — tam sporna była
+   kolejność wywołań i rozstrzygał ją dopiero test, tu sporna jest
+   osiągalność i rozstrzyga ją brak bindingu. Wpis zostaje.
+
 5. **„Cofnij lewę" po zakończonej lewie nie zmniejsza licznika.** Zakończona
    lewa zostaje w `playedCards` jako czteroelementowa tablica — sygnał jest
    czyszczony dopiero przy zagraniu piątej karty (`addPlayedCard`,

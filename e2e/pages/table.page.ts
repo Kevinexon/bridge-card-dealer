@@ -194,4 +194,41 @@ export class TablePage {
     await this.openAdminTab('Cofnij');
     await this.page.getByTestId('reset-play').click();
   }
+
+  alertItems(): Locator {
+    return this.page.getByTestId('alert-item');
+  }
+
+  async enableEditMode(): Promise<void> {
+    await this.openAdminTab('Rozdanie');
+    await this.page.getByTestId('edit-mode-toggle').click();
+  }
+
+  async dealNew(): Promise<void> {
+    await this.openAdminTab('Rozdanie');
+    await this.page.getByTestId('deal-new').click();
+  }
+
+  async setBoardNumber(value: number): Promise<void> {
+    await this.openAdminTab('Rozdanie');
+    await this.page.getByTestId('board-number').fill(String(value));
+  }
+
+  async setVulnerable(line: 'NS' | 'WE'): Promise<void> {
+    await this.openAdminTab('Rozdanie');
+    await this.page.getByTestId(`vulnerable-${line}`).click();
+  }
+
+  async expectVulnerable(seat: Seat, isVulnerable: boolean): Promise<void> {
+    // Klasa .vulnerable (hand.html:42) jest jedynym wskaznikiem zalozen —
+    // drugi swiadomy wyjatek od zasady "zadnych selektorow CSS", obok expectTurn.
+    const marker = this.hand(seat).locator('.vulnerable');
+    await (isVulnerable ? expect(marker).toBeVisible() : expect(marker).toHaveCount(0));
+  }
+
+  async addAlert(seat: Seat, text: string): Promise<void> {
+    await this.biddingColumn(seat).getByTestId('bidding-entry').last().click();
+    await this.page.getByTestId('alert-input').fill(text);
+    await this.page.getByTestId('alert-confirm').click();
+  }
 }

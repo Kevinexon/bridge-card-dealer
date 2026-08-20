@@ -1,6 +1,10 @@
-<div class="max-w-132 flex flex-wrap" [class.hidden]="alertedBiddings().length == 0">
+<div
+  data-testid="alert-panel"
+  class="max-w-132 flex flex-wrap"
+  [class.hidden]="alertedBiddings().length == 0"
+>
   @for (bidding of alertedBiddings(); track $index) {
-    <div class="p-2 rounded-2xl shadow-sm bg-gray-100 m-2">
+    <div data-testid="alert-item" class="p-2 rounded-2xl shadow-sm bg-gray-100 m-2">
       <p class="text-lg font-bold p-2">
         Alert {{ bidding.biddingValue }} <span [class]="bidding.color">{{ bidding.suit }}</span>
       </p>

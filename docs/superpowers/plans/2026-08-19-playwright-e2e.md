@@ -23,8 +23,8 @@ Stan na 2026-08-20, gałąź `feature/playwright-e2e`.
 | 5. Page Object + testidy rąk            | ✅ zrobione     | `e3521ad` |
 | 6. Licytacja e2e                        | ✅ zrobione     | `b7787c0` |
 | 7. Rozgrywka e2e                        | ✅ zrobione     | (ten)     |
-| 8. Tryb trenera e2e                     | ⬜ **następne** |           |
-| 9. Skrypt `testids.mjs`                 | ⬜              |           |
+| 8. Tryb trenera e2e                     | ✅ zrobione     | (ten)     |
+| 9. Skrypt `testids.mjs`                 | ⬜ **następne** |           |
 | 10. Weryfikacja końcowa                 | ⬜              |           |
 
 Zweryfikowany stan po Tasku 6:
@@ -60,6 +60,10 @@ zakończonej lewy nie zmniejsza licznika, spec sekcja 10 punkt 5) — jego test
 jest oznaczony `fixme`.
 
 Nowa baza dla Tasków 8-10: **18 passed + 2 skipped**, nie 19 + 3.
+
+**Po Tasku 8:** 26 passed + 2 skipped. Rozstrzygnięto też zaległą wątpliwość
+o martwy widok dziadka — wpis w specu zostaje, bo `isDummy` nie jest
+bindowany w żadnym `<app-hand>`, więc gałąź jest nieosiągalna z UI.
 
 **Do rozstrzygnięcia w Tasku 8:** bug „martwy widok dziadka" opiera się
 wyłącznie na odczycie kodu, bez testu — czyli dokładnie tak samo jak obalona
@@ -1696,6 +1700,10 @@ Dopisz wiersz do tabeli w sekcji 7 specu:
 ```
 | Numer rozdania w panelu | `bidding-panel-board-number` |
 ```
+
+Popraw też wiersz alertów: tabela wymienia `alert-dialog`, którego Task 8 nie
+dodał i którego żaden test nie używa. Zastąp go faktycznie istniejącymi
+`alert-confirm` i `alert-cancel`.
 
 - [ ] **Step 7: Commit**
 

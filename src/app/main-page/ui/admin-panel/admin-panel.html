@@ -1,7 +1,11 @@
-<div class="p-4 rounded-2xl max-w-132" [class]="isPanelHidden() ? '' : 'shadow-sm bg-gray-100'">
+<div
+  data-testid="admin-panel"
+  class="p-4 rounded-2xl max-w-132"
+  [class]="isPanelHidden() ? '' : 'shadow-sm bg-gray-100'"
+>
   <div class="text-2xl flex justify-between">
     <div><span class="text-xl" [class.hidden]="isPanelHidden()">Admin panel</span></div>
-    <button matIconButton (click)="changePanelVisibility()">
+    <button matIconButton data-testid="admin-toggle" (click)="changePanelVisibility()">
       <mat-icon>menu</mat-icon>
     </button>
   </div>
@@ -14,12 +18,12 @@
             <div class="flex-1">
               <mat-form-field appearance="outline">
                 <mat-label>Numer rozdania</mat-label>
-                <input matInput type="number" [(ngModel)]="number" />
+                <input matInput type="number" data-testid="board-number" [(ngModel)]="number" />
               </mat-form-field>
             </div>
 
             <div class="flex-1 flex justify-center">
-              <button matFab extended (click)="onDealNew.emit()">
+              <button matFab extended data-testid="deal-new" (click)="onDealNew.emit()">
                 <mat-icon>refresh</mat-icon>
                 Rozdaj ponownie
               </button>
@@ -27,7 +31,11 @@
           </div>
 
           <div class="mt-2">
-            <mat-slide-toggle [(ngModel)]="editMode" labelPosition="before">
+            <mat-slide-toggle
+              data-testid="edit-mode-toggle"
+              [(ngModel)]="editMode"
+              labelPosition="before"
+            >
               Tryb edycji rąk:</mat-slide-toggle
             >
           </div>
@@ -35,8 +43,8 @@
           <div class="mt-2">
             <span class="pr-2">Założenia (po parti):</span>
             <mat-button-toggle-group [(ngModel)]="linesVulnerable" multiple>
-              <mat-button-toggle value="NS">NS</mat-button-toggle>
-              <mat-button-toggle value="WE">WE</mat-button-toggle>
+              <mat-button-toggle value="NS" data-testid="vulnerable-NS">NS</mat-button-toggle>
+              <mat-button-toggle value="WE" data-testid="vulnerable-WE">WE</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
 
