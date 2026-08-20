@@ -138,10 +138,33 @@ are prefixed `on` against the Angular style guide.
 
 ## Deployment
 
-GitHub Pages, static HTML. Two mechanisms currently conflict and neither is
-verified working: `.github/workflows/jekyll-gh-pages.yml` is an untouched Jekyll
-template that will never build an Angular app, while `angular.json` defines an
-`angular-cli-ghpages` deploy target run manually. `baseHref` there is
-`https://kevinexon.github.io/bridge-card-dealer/` while `src/index.html` declares
-`<base href="/">`. Fixing this is a scheduled task, not an accident to correct
-in passing.
+GitHub Pages, static HTML, live at
+`https://kevinexon.github.io/bridge-card-dealer/`. Fixed and verified on the
+live URL on 2026-08-20.
+
+`.github/workflows/deploy.yml` runs on every push to `main`: `npm ci`, unit
+tests as a gate, `ng build --base-href=/bridge-card-dealer/`, then a force-push
+of `dist/BridgeCardDealer/browser` to the `gh-pages` branch. Pushing that branch
+triggers GitHub's own `pages build and deployment`, which publishes it.
+
+Three constraints that shaped this, so it is not "simplified" back into a bug:
+
+- **Pages serves from the `gh-pages` branch**, not from a workflow artifact
+  (`build_type: legacy`, `source: gh-pages`). Publishing via
+  `actions/deploy-pages` would mean switching the source to "GitHub Actions" in
+  repo settings, which needs **admin** on the repo — the account used here has
+  push only.
+- **The app is served from a subdirectory**, so the build needs
+  `--base-href=/bridge-card-dealer/`. `src/index.html` keeps `<base href="/">`
+  for local dev; the build flag overrides it. The manual `ng deploy` target in
+  `angular.json` carries the same relative path, so both routes produce
+  identical output.
+- **`404.html` is a copy of `index.html`** and `.nojekyll` is present. The first
+  makes deep links like `/stolik` reach the Angular router (Pages serves
+  `404.html` with a 404 status; the router then takes over). The second stops
+  Pages from running the output through Jekyll.
+
+What was wrong before: `jekyll-gh-pages.yml`, an untouched marketplace template,
+built the _source repo_ with Jekyll and published the rendered README over the
+app on every push to `main`. The public URL returned 200 and showed README text
+with no `app-root` at all.
