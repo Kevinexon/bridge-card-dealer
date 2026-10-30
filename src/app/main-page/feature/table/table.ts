@@ -26,13 +26,14 @@ import {
   isBiddingPhaseOver,
   isContractDoubledOrRedoubled,
 } from '../../utils/bidding.util';
-import { Card, HandName, Suit } from '../../utils/card.util';
+import { Card, HandName, Suit, suitDisplayOrder } from '../../utils/card.util';
 import { TableService } from '../../utils/services/table-service';
 import { AlertPanel } from '../../ui/alert-panel/alert-panel';
+import { Bin } from '../../ui/bin/bin';
 
 @Component({
   selector: 'app-table',
-  imports: [Hand, PlayArea, TricksCount, BiddingTable, BiddingPanel, AdminPanel, AlertPanel],
+  imports: [Hand, PlayArea, TricksCount, BiddingTable, BiddingPanel, AdminPanel, AlertPanel, Bin],
   providers: [TableService],
   templateUrl: './table.html',
   styleUrl: './table.css',
@@ -72,6 +73,14 @@ export class Table implements OnInit {
   westHand: Signal<Card[]> = computed(() => {
     let deck = this.tableService.deck();
     return this.tableService.getCardForHand('West');
+  });
+  binnedCards: Signal<Card[]> = computed(() => {
+    let deck = this.tableService.deck();
+    return this.tableService.getBinnedCards();
+  });
+  binnedSuits: Signal<Suit[]> = computed(() => {
+    let deck = this.tableService.deck();
+    return suitDisplayOrder().filter((suit) => this.tableService.isSuitInBin(suit));
   });
 
   /**
@@ -126,6 +135,18 @@ export class Table implements OnInit {
 
   onMoveCard(event: { card: Card; targetHand: HandName }) {
     this.tableService.moveCard(event.targetHand, event.card);
+  }
+
+  onCardBinned(card: Card) {
+    this.tableService.binCard(card);
+  }
+
+  onRestoreBin() {
+    this.tableService.restoreBinnedCards();
+  }
+
+  onToggleSuitInBin(suit: Suit) {
+    this.tableService.toggleSuitInBin(suit);
   }
 
   onUndoBid() {

@@ -27,6 +27,33 @@ export class TablePage {
     return this.page.getByTestId(`hand-${seat}`);
   }
 
+  bin(): Locator {
+    return this.page.getByTestId('bin');
+  }
+
+  binCount(): Locator {
+    return this.page.getByTestId('bin-count');
+  }
+
+  async expectBinCount(expected: number): Promise<void> {
+    await this.openAdminTab('Kosz');
+    await expect(this.binCount()).toHaveText(String(expected));
+  }
+
+  async restoreBin(): Promise<void> {
+    await this.openAdminTab('Kosz');
+    await this.page.getByTestId('bin-restore').click();
+  }
+
+  binSuitButton(suit: Suit): Locator {
+    return this.page.getByTestId(`bin-suit-${suit}`);
+  }
+
+  async toggleSuitInBin(suit: Suit): Promise<void> {
+    await this.openAdminTab('Kosz');
+    await this.binSuitButton(suit).click();
+  }
+
   card(suit: Suit, rank: Rank): Locator {
     return this.page.getByTestId(`card-${suit}-${rank}`);
   }
@@ -90,7 +117,7 @@ export class TablePage {
     await this.redoubleButton().click();
   }
 
-  async openAdminTab(name: 'Rozdanie' | 'Cofnij'): Promise<void> {
+  async openAdminTab(name: 'Rozdanie' | 'Cofnij' | 'Kosz'): Promise<void> {
     await this.page.getByRole('tab', { name }).click();
   }
 
@@ -109,13 +136,27 @@ export class TablePage {
     await this.page.getByTestId(`dealer-${seat}`).click();
   }
 
-  async dragCard(suit: Suit, rank: Rank, options: { to: Seat }): Promise<void> {
+  async dragCard(suit: Suit, rank: Rank, options: { to: Seat | 'Bin' }): Promise<void> {
+    const target = await this.holdCardOver(suit, rank, options);
+    await this.page.mouse.up();
+    // Warunek gotowosci: aplikacja jest zoneless, wiec karta laduje w nowym
+    // miejscu dopiero w kolejnym cyklu detekcji zmian. Bez tego nastepne
+    // przeciagniecie czyta pozycje karty sprzed przerysowania i chwyta sasiada.
+    await expect(target.getByTestId(`card-${suit}-${rank}`)).toBeVisible();
+  }
+
+  /** Przeciaga karte nad cel i trzyma ja tam, nie puszczajac przycisku myszy. */
+  async holdCardOver(suit: Suit, rank: Rank, options: { to: Seat | 'Bin' }): Promise<Locator> {
     const from = await this.card(suit, rank).boundingBox();
-    const to = await this.hand(options.to).boundingBox();
+    const target = options.to === 'Bin' ? this.bin() : this.hand(options.to);
+    const to = await target.boundingBox();
     if (!from || !to) {
       throw new Error(`Cannot drag ${suit} ${rank} to ${options.to}: element not laid out`);
     }
-    const startX = from.x + from.width / 2;
+    // Karty nachodza na siebie i kazda nastepna przykrywa prawa czesc
+    // poprzedniej, wiec srodek karty nalezy juz do sasiada. Wlasna jest tylko
+    // waska lewa krawedz — za nia trzeba chwycic.
+    const startX = from.x + 8;
     const startY = from.y + from.height / 2;
     const endX = to.x + to.width / 2;
     const endY = to.y + to.height / 2;
@@ -131,7 +172,20 @@ export class TablePage {
         startY + ((endY - startY) * step) / steps,
       );
     }
+    return target;
+  }
+
+  async releaseCard(): Promise<void> {
     await this.page.mouse.up();
+  }
+
+  /**
+   * Zaslepka CDK (kopia przeciaganej karty wstawiana do listy docelowej).
+   * Trzeci swiadomy wyjatek od zasady "zadnych selektorow CSS": klase nadaje
+   * biblioteka, wiec nie da sie jej oznaczyc testidem.
+   */
+  dragPlaceholder(): Locator {
+    return this.page.locator('.cdk-drag-placeholder');
   }
 
   playedCard(seat: Seat): Locator {

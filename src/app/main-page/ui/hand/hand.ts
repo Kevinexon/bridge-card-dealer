@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Component, computed, input, output, signal } from '@angular/core';
-import { Card, Suit, HandName, suitDisplayOrder } from '../../utils/card.util';
+import { Card, DropTarget, Suit, HandName, suitDisplayOrder } from '../../utils/card.util';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -15,7 +15,7 @@ export class Hand {
   handDeck = input.required<Card[]>();
   handsTurn = input.required<boolean>();
 
-  restHands = input<HandName[]>([]);
+  restHands = input<DropTarget[]>([]);
   isDealer = input<boolean>(false);
   isVulnerable = input<boolean>(false);
   canPlay = input<boolean>(false);

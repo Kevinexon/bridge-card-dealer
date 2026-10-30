@@ -1,5 +1,10 @@
 export type HandName = 'North' | 'East' | 'South' | 'West';
 
+/// Id listy cdkDropList kosza; reka uzywa jako id swojej nazwy (HandName).
+export const BIN_ID = 'Bin';
+
+export type DropTarget = HandName | typeof BIN_ID;
+
 export type Suit = 'spades' | 'hearts' | 'diamonds' | 'clubs';
 
 export type CardName = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A';
@@ -35,6 +40,13 @@ export interface Card {
   imgUrl: string;
   hand: HandName;
   isPlayed?: boolean;
+  /**
+   * Karta wyrzucona do kosza. Osobna flaga, a nie isPlayed: "Cofnij rozgrywke"
+   * zeruje isPlayed calej talii, a wyrzucone karty maja wtedy zostac w koszu.
+   * Pole hand zostaje nietkniete, wiec przywrocenie wraca karte tam, skad
+   * zostala wyrzucona.
+   */
+  isInBin?: boolean;
 }
 
 export function createCard(suit: Suit, name: CardName): Card {

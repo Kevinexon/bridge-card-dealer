@@ -51,3 +51,14 @@
   background: #e0e0e0;
   border-radius: 5rem;
 }
+
+/*
+ * Zaslepka CDK to kopia przeciaganej karty razem z jej klasami. Karta z reki
+ * jest "absolute h-full" wzgledem swojego gniazda, a karta z kosza ma ujemny
+ * margines — w obcej liscie obie rozjezdzaja uklad (rozciagnieta karta w koszu,
+ * zepchnieta karta w rece). Kolejnosc kart i tak wylicza aplikacja, wiec
+ * zaslepka nie jest do niczego potrzebna.
+ */
+.cdk-drag-placeholder {
+  display: none;
+}

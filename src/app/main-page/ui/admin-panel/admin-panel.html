@@ -95,7 +95,7 @@
               (click)="resetPlayedCards.emit()"
             >
               <mat-icon>undo</mat-icon>
-              Cofnij rogrywkę
+              Cofnij rozgrywkę
             </button>
 
             <button
@@ -116,6 +116,52 @@
             >
               <mat-icon>keyboard_arrow_left</mat-icon>
               Cofnij kartę
+            </button>
+          </div>
+        </section>
+      </mat-tab>
+
+      <mat-tab label="Kosz" class="mat-elevation-z4">
+        <section [class.hidden]="isPanelHidden()" class="pt-2">
+          <p class="text-xl py-2">
+            Kart w koszu: <span data-testid="bin-count" class="font-bold">{{ binCount() }}</span>
+          </p>
+          @if (!editMode()) {
+            <p class="text-gray-600 pb-2">Kosz na stole widać w trybie edycji rąk.</p>
+          }
+          <p class="pb-2">Schowaj lub przywróć cały kolor:</p>
+          <div class="flex pb-2">
+            @for (suit of suits; track suit) {
+              <button
+                matButton="outlined"
+                class="mx-1 min-w-16!"
+                [class.bg-gray-300!]="binnedSuits().includes(suit)"
+                [attr.data-testid]="'bin-suit-' + suit"
+                [attr.aria-pressed]="binnedSuits().includes(suit)"
+                (click)="suitBinToggled.emit(suit)"
+              >
+                <span
+                  class="text-2xl"
+                  [class]="suit"
+                  [class.opacity-30]="binnedSuits().includes(suit)"
+                  >{{ suitSymbols.get(suit) }}</span
+                >
+              </button>
+            }
+          </div>
+
+          <mat-divider />
+
+          <div class="pt-4">
+            <button
+              matButton="outlined"
+              class="mx-1"
+              data-testid="bin-restore"
+              [disabled]="binCount() === 0"
+              (click)="restoreBin.emit()"
+            >
+              <mat-icon>restore_from_trash</mat-icon>
+              Przywróć karty z kosza
             </button>
           </div>
         </section>

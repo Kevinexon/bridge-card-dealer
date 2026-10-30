@@ -158,6 +158,7 @@ Nazwy są po angielsku i semantyczne — opisują rolę, nie wygląd.
 | Cofanie            | `undo-bid`, `reset-bidding`, `undo-card`, `undo-trick`, `reset-play`                       |
 | Alerty             | `alert-input`, `alert-confirm`, `alert-cancel`, `alert-panel`, `alert-item`                |
 | Numer rozdania     | `bidding-panel-board-number`                                                               |
+| Kosz               | `bin`, `bin-count`, `bin-restore`, `bin-suit-spades` … `bin-suit-clubs`                    |
 
 Karta jest w danym momencie albo w ręce, albo na stole — `isPlayed` filtruje ją
 z `sortedHandDeck`, więc `card-spades-A` nigdy nie występuje dwukrotnie.

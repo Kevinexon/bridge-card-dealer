@@ -19,11 +19,50 @@ export class TableService {
 
   moveCard(handTarget: HandName, card: Card) {
     card.hand = handTarget;
+    card.isInBin = false;
     this.deck.set([...this.deck()]);
   }
 
   getCardForHand(hand: HandName): Card[] {
-    return this.deck().filter((card) => card.hand === hand);
+    return this.deck().filter((card) => card.hand === hand && !card.isInBin);
+  }
+
+  getBinnedCards(): Card[] {
+    return this.deck().filter((card) => card.isInBin);
+  }
+
+  binCard(card: Card) {
+    card.isInBin = true;
+    this.deck.set([...this.deck()]);
+  }
+
+  restoreBinnedCards() {
+    this.deck().forEach((card) => (card.isInBin = false));
+    this.deck.set([...this.deck()]);
+  }
+
+  /**
+   * Kolor jest "w koszu", gdy w rekach nie zostala zadna jego karta, a w koszu
+   * jest choc jedna. Karty zagrane w lewach sie nie licza — przycisk ich nie rusza.
+   */
+  isSuitInBin(suit: Suit): boolean {
+    const suitCards = this.deck().filter((card) => card.suit === suit);
+    return (
+      suitCards.some((card) => card.isInBin) &&
+      !suitCards.some((card) => !card.isInBin && !card.isPlayed)
+    );
+  }
+
+  /**
+   * Pierwsze klikniecie chowa wszystkie karty koloru z rak — takze wtedy, gdy
+   * czesc juz lezy w koszu. Drugie, gdy caly kolor jest w koszu, go przywraca.
+   */
+  toggleSuitInBin(suit: Suit) {
+    const restore = this.isSuitInBin(suit);
+    this.deck()
+      .filter((card) => card.suit === suit && !card.isPlayed)
+      .forEach((card) => (card.isInBin = !restore));
+    this.deck.set([...this.deck()]);
   }
 
   playCard(card: Card) {

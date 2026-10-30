@@ -21,13 +21,16 @@
         [canPlay]="!biddingPhase()"
         [canMoveCards]="cardsMovementEnabled()"
         [trumpSuit]="trumpSuit()"
-        [restHands]="['South', 'East', 'West']"
+        [restHands]="['South', 'East', 'West', 'Bin']"
         (cardDropped)="onMoveCard($event)"
         (cardPlayed)="onCardPlayed($event)"
       />
     </div>
 
     <div class="flex-1 p-4">
+      @if (cardsMovementEnabled()) {
+        <app-bin [binnedCards]="binnedCards()" (cardBinned)="onCardBinned($event)" />
+      }
       <app-alert-panel [alertedBiddings]="alertedBiddings()" />
     </div>
   </div>
@@ -43,7 +46,7 @@
         [canPlay]="!biddingPhase()"
         [canMoveCards]="cardsMovementEnabled()"
         [trumpSuit]="trumpSuit()"
-        [restHands]="['South', 'East', 'North']"
+        [restHands]="['South', 'East', 'North', 'Bin']"
         (cardDropped)="onMoveCard($event)"
         (cardPlayed)="onCardPlayed($event)"
       />
@@ -72,7 +75,7 @@
         [canPlay]="!biddingPhase()"
         [canMoveCards]="cardsMovementEnabled()"
         [trumpSuit]="trumpSuit()"
-        [restHands]="['South', 'North', 'West']"
+        [restHands]="['South', 'North', 'West', 'Bin']"
         (cardDropped)="onMoveCard($event)"
         (cardPlayed)="onCardPlayed($event)"
       />
@@ -107,7 +110,7 @@
         [canPlay]="!biddingPhase()"
         [canMoveCards]="cardsMovementEnabled()"
         [trumpSuit]="trumpSuit()"
-        [restHands]="['North', 'East', 'West']"
+        [restHands]="['North', 'East', 'West', 'Bin']"
         (cardDropped)="onMoveCard($event)"
         (cardPlayed)="onCardPlayed($event)"
       />
@@ -119,6 +122,8 @@
         [(linesVulnerable)]="linesVulnerable"
         [(number)]="number"
         [(editMode)]="cardsMovementEnabled"
+        [binCount]="binnedCards().length"
+        [binnedSuits]="binnedSuits()"
         (dealNewRequested)="dealNewDeck()"
         (dealerChanged)="reset()"
         (undoBid)="onUndoBid()"
@@ -126,6 +131,8 @@
         (undoCard)="onUndoCard()"
         (undoTrick)="onUndoTrick()"
         (resetPlayedCards)="resetPlayedCards()"
+        (restoreBin)="onRestoreBin()"
+        (suitBinToggled)="onToggleSuitInBin($event)"
       />
     </div>
   </div>

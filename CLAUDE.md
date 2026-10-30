@@ -86,6 +86,32 @@ first. Students asked for this: the old order ♠ ♥ ♦ ♣ put the two red su
 to each other. `Table.trumpSuit` derives the trump from the contract and feeds
 every hand.
 
+**The bin is a flag, not a fifth hand.** The trainer drags cards they do not
+want to show into a bin (visible only in edit mode) and restores them from the
+"Kosz" tab of the admin panel. A binned card keeps its `hand` and gets
+`isInBin = true`; `getCardForHand` filters it out, so "restore" just clears the
+flag and every card lands back where it was thrown from. It must stay separate
+from `isPlayed`: `refreshPlayedCards` ("Cofnij rozgrywkę") clears `isPlayed`
+on the whole deck, and binned cards have to survive that. Dragging a card out
+of the bin into a hand goes through `moveCard`, which clears the flag.
+`dealNewDeck` builds a fresh deck, so a new deal empties the bin for free.
+
+The four suit buttons in the same tab toggle a whole suit (`toggleSuitInBin`).
+A suit counts as binned only when no card of it is left in a hand and at least
+one is in the bin (`isSuitInBin`). So a click on a partly binned suit bins the
+rest, and only the next click restores it — agreed with the trainer. Cards
+already played in a trick are never touched.
+
+**Drag and drop runs with the CDK placeholder hidden and sorting off.** The CDK
+placeholder is a clone of the dragged card, classes included. A hand card is
+`absolute h-full` against its slot and a bin card has a negative margin, so in
+the other list either clone breaks the layout (a stretched card in the bin, a
+card pushed down in a hand). `styles.css` hides `.cdk-drag-placeholder`, and
+both lists set `cdkDropListSortingDisabled`; sorting would otherwise shift the
+cards by the hidden placeholder's zero size. Neither list needs either feature,
+because card order is computed, not dragged. Guarded by the two "keeps the
+cards in place" tests in `e2e/bin.spec.ts`.
+
 **The app has no randomness at all** — no `Math.random`, `Date`, `crypto`,
 network or storage. State is a pure function of the click sequence. This makes
 e2e tests unusually stable; the only flake sources are Material ripples and CDK
